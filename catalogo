@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Macbooks Cordoba & Altatech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: -apple-system, 'Inter', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(160deg, #e8eaf6 0%, #fce4ec 50%, #e3f2fd 100%);
+    background-attachment: fixed;
+    color: #1d1d1f;
+  }
+
+  /* HEADER */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 0.5px solid rgba(0,0,0,0.1);
+    padding: 0 2rem;
+    height: 52px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    font-size: 15px; font-weight: 600; color: #1d1d1f;
+    letter-spacing: -0.02em; display: flex; align-items: center; gap: 8px;
+  }
+  .logo-icon { width: 20px; height: 20px; opacity: .85; }
+  #cart-btn {
+    background: rgba(255,255,255,0.7);
+    border: 0.5px solid rgba(0,0,0,0.12);
+    color: #1d1d1f;
+    padding: 6px 14px; border-radius: 980px; cursor: pointer;
+    font-family: inherit; font-size: 13px; font-weight: 500;
+    display: flex; align-items: center; gap: 7px;
+    backdrop-filter: blur(10px);
+    transition: background .2s;
+  }
+  #cart-btn:hover { background: rgba(255,255,255,0.95); }
+  #cart-count {
+    background: #5e5ce6; color: #fff;
+    border-radius: 50%; width: 18px; height: 18px;
+    font-size: 11px; font-weight: 700;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 5rem 2rem 3rem;
+  }
+  .hero-eyebrow {
+    font-size: 12px; font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; color: #5e5ce6;
+    margin-bottom: .75rem;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700; letter-spacing: -0.04em; line-height: 1.05;
+    color: #1d1d1f; margin-bottom: .75rem;
+  }
+  .hero p { font-size: 16px; color: #6e6e73; max-width: 400px; margin: 0 auto; line-height: 1.5; }
+
+  /* SEARCH */
+  .controls { padding: 1.5rem 2rem 1rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  .search-box {
+    background: rgba(255,255,255,0.7);
+    border: 0.5px solid rgba(0,0,0,0.1);
+    border-radius: 12px;
+    padding: 10px 16px 10px 38px;
+    width: 100%; max-width: 480px;
+    font-family: inherit; font-size: 15px; color: #1d1d1f;
+    outline: none;
+    backdrop-filter: blur(10px);
+    transition: border-color .2s, background .2s;
+    position: relative;
+  }
+  .search-wrap { position: relative; width: 100%; max-width: 480px; }
+  .search-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; }
+  .search-box:focus { background: rgba(255,255,255,0.95); border-color: rgba(94,92,230,.5); }
+  .search-box::placeholder { color: #aeaeb2; }
+
+  .filters { display: flex; gap: .4rem; flex-wrap: wrap; justify-content: center; }
+  .filter-btn {
+    background: rgba(255,255,255,0.55);
+    border: 0.5px solid rgba(0,0,0,0.1);
+    color: #6e6e73; padding: 5px 14px; border-radius: 980px;
+    cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 500;
+    transition: all .2s; backdrop-filter: blur(8px);
+  }
+  .filter-btn:hover { background: rgba(255,255,255,.9); color: #1d1d1f; }
+  .filter-btn.active { background: #5e5ce6; border-color: #5e5ce6; color: #fff; }
+
+  .estado-filters { display: flex; gap: .4rem; flex-wrap: wrap; justify-content: center; }
+  .estado-btn {
+    background: rgba(255,255,255,0.55);
+    border: 0.5px solid rgba(0,0,0,0.1);
+    color: #6e6e73; padding: 5px 14px; border-radius: 980px;
+    cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 500;
+    transition: all .2s; backdrop-filter: blur(8px);
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .estado-btn:hover { background: rgba(255,255,255,.9); color: #1d1d1f; }
+  .estado-btn.active { background: rgba(255,255,255,.85); color: #1d1d1f; border-color: rgba(0,0,0,.18); font-weight: 600; }
+  .estado-btn .dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
+  .estado-btn.disponible .dot { background: #34c759; }
+  .estado-btn.transito .dot { background: #ff9f0a; }
+  .estado-btn.pedido .dot { background: #5e5ce6; }
+  .estado-btn.disponible.active { background: rgba(52,199,89,.12); color: #248a3d; border-color: rgba(52,199,89,.3); }
+  .estado-btn.transito.active { background: rgba(255,159,10,.12); color: #b36200; border-color: rgba(255,159,10,.3); }
+  .estado-btn.pedido.active { background: rgba(94,92,230,.12); color: #5e5ce6; border-color: rgba(94,92,230,.3); }
+
+  #hero-category { display: inline-block; transition: opacity .2s, transform .2s; }
+
+  .capacidad-filters { display: flex; gap: .4rem; flex-wrap: wrap; justify-content: center; }
+  .cap-btn {
+    background: rgba(255,255,255,0.55);
+    border: 0.5px solid rgba(0,0,0,0.1);
+    color: #6e6e73; padding: 5px 14px; border-radius: 980px;
+    cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 500;
+    transition: all .2s; backdrop-filter: blur(8px);
+  }
+  .cap-btn:hover { background: rgba(255,255,255,.9); color: #1d1d1f; }
+  .cap-btn.active { background: #1d1d1f; border-color: #1d1d1f; color: #fff; font-weight: 600; }
+
+  .controls-panel {
+    width: min(1100px, calc(100% - 2rem));
+    background: rgba(255,255,255,0.58);
+    border: 1px solid rgba(255,255,255,0.72);
+    border-radius: 24px;
+    padding: 1rem;
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    box-shadow: 0 12px 50px rgba(31,41,55,.07);
+  }
+  .stats-strip { display: flex; gap: .8rem; flex-wrap: wrap; justify-content: center; width: 100%; }
+  .stat-pill {
+    padding: .8rem 1rem; border-radius: 18px; min-width: 170px;
+    background: rgba(255,255,255,.55); border: 1px solid rgba(255,255,255,.7);
+    text-align: left;
+  }
+  .stat-label { font-size: 11px; color: #8e8e93; text-transform: uppercase; letter-spacing: .08em; margin-bottom: .2rem; }
+  .stat-value { font-size: 18px; font-weight: 700; color: #1d1d1f; letter-spacing: -.03em; }
+  .filters-panel-grid { display: grid; grid-template-columns: 1fr; gap: .9rem; width: 100%; }
+  .filter-group {
+    background: rgba(255,255,255,.35);
+    border: 1px solid rgba(255,255,255,.6);
+    border-radius: 18px;
+    padding: .9rem;
+  }
+  .group-head { display: flex; align-items: center; justify-content: space-between; gap: .8rem; margin-bottom: .7rem; }
+  .group-title { font-size: 12px; color: #6e6e73; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+  .group-meta { font-size: 12px; color: #8e8e93; }
+  .filter-row { display: flex; flex-wrap: wrap; gap: .45rem; }
+  .facet-btn {
+    background: rgba(255,255,255,0.7);
+    border: 1px solid rgba(0,0,0,0.08);
+    color: #4b5563; padding: 8px 12px; border-radius: 999px;
+    cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 600;
+    transition: all .2s ease; display: inline-flex; align-items: center; gap: 8px;
+  }
+  .facet-btn:hover { transform: translateY(-1px); background: rgba(255,255,255,.95); color: #111827; }
+  .facet-btn { position: relative; }
+  .facet-btn.active { background: #5e5ce6; border-color: #5e5ce6; color: #fff; box-shadow: 0 8px 20px rgba(94,92,230,.22); }
+  .facet-check { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 3px; border: 1.5px solid rgba(94,92,230,.35); margin-right: 5px; font-size: 9px; font-weight: 700; flex-shrink: 0; transition: all .15s; }
+  .facet-btn.active .facet-check { background: rgba(255,255,255,.25); border-color: rgba(255,255,255,.5); color: #fff; }
+  .facet-btn.dark.active .facet-check { background: rgba(255,255,255,.2); border-color: rgba(255,255,255,.4); }
+  .facet-btn.dark.active { background: #1d1d1f; border-color: #1d1d1f; }
+  .facet-btn.green.active { background: #34c759; border-color: #34c759; }
+  .facet-btn.orange.active { background: #ff9f0a; border-color: #ff9f0a; }
+  .facet-btn.violet.active { background: #5e5ce6; border-color: #5e5ce6; }
+  .facet-count {
+    min-width: 20px; height: 20px; padding: 0 6px;
+    border-radius: 999px; display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,.06); font-size: 11px; font-weight: 700;
+  }
+  .facet-btn.active .facet-count { background: rgba(255,255,255,.18); }
+  .toolbar-row { display: flex; gap: .8rem; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+  .active-filters { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .active-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,.75); border: 1px solid rgba(0,0,0,.08);
+    color: #374151; border-radius: 999px; padding: 8px 12px; font-size: 12px; font-weight: 600;
+  }
+  .chip-x { cursor: pointer; color: #8e8e93; font-weight: 700; }
+  .toolbar-actions { display:flex; align-items:center; gap:.65rem; flex-wrap:wrap; }
+  .sort-select {
+    background: rgba(255,255,255,.78); border: 1px solid rgba(0,0,0,.08);
+    border-radius: 12px; padding: 9px 12px; font-family: inherit; font-size: 13px; color: #1d1d1f;
+  }
+  /* Floating clear btn */
+  .fab-clear {
+    position: fixed;
+    bottom: 2rem;
+    right: calc(min(400px,100vw) + 1.5rem);
+    z-index: 150;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 0.5px solid rgba(0,0,0,0.15);
+    color: #1d1d1f;
+    padding: 10px 18px;
+    border-radius: 980px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+    transition: transform .25s cubic-bezier(.4,0,.2,1), opacity .25s, right .35s cubic-bezier(.4,0,.2,1), background .2s;
+  }
+  .fab-clear:hover { background: rgba(255,255,255,0.98); transform: translateY(-2px); }
+  .fab-clear.cart-open { right: 1.5rem; }
+  @media(max-width:600px) {
+    .fab-clear { bottom: 5rem; right: 1rem; }
+    .fab-clear.cart-open { right: 1rem; }
+  }
+
+  .ghost-btn {
+    background: rgba(255,255,255,.7); border: 1px solid rgba(0,0,0,.08);
+    border-radius: 12px; padding: 9px 12px; cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 600; color:#374151;
+  }
+  .ghost-btn:hover { background: rgba(255,255,255,.95); }
+
+  /* RESULTS */
+  .results-info { text-align: center; font-size: 13px; color: #aeaeb2; padding: .25rem 2rem .75rem; }
+
+  /* GRID */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1rem; padding: 0 2rem 5rem;
+    max-width: 1400px; margin: 0 auto;
+  }
+
+  .card {
+    background: rgba(255,255,255,0.72);
+    border: 0.5px solid rgba(255,255,255,0.9);
+    border-radius: 18px; padding: 1.25rem;
+    display: flex; flex-direction: column; gap: .65rem;
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    transition: transform .25s, box-shadow .25s;
+    animation: fadeUp .45s ease both;
+  }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,.1); }
+
+  .card-top { display: flex; align-items: center; justify-content: space-between; gap: .5rem; }
+  .sheet-tag {
+    font-size: 10px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+    background: rgba(94,92,230,.1); color: #5e5ce6;
+    padding: 3px 9px; border-radius: 980px;
+  }
+  .status-disp { background: rgba(52,199,89,.12); color: #248a3d; border-radius: 980px; padding: 3px 9px; font-size: 10px; font-weight: 600; }
+  .status-agot { background: rgba(255,59,48,.1); color: #c0392b; border-radius: 980px; padding: 3px 9px; font-size: 10px; font-weight: 600; }
+  .status-otro { background: rgba(142,142,147,.12); color: #636366; border-radius: 980px; padding: 3px 9px; font-size: 10px; font-weight: 600; }
+
+  .card-name { font-size: 14px; font-weight: 600; color: #1d1d1f; line-height: 1.35; letter-spacing: -.01em; }
+  .card-specs { display: flex; gap: .35rem; flex-wrap: wrap; }
+  .spec { font-size: 11px; color: #6e6e73; background: rgba(0,0,0,.05); padding: 2px 9px; border-radius: 6px; }
+
+  .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: .65rem; border-top: 0.5px solid rgba(0,0,0,.06); }
+  .price-lbl { font-size: 10px; color: #aeaeb2; margin-bottom: 1px; }
+  .price { font-size: 16px; font-weight: 700; color: #1d1d1f; letter-spacing: -.02em; }
+  .add-btn {
+    background: #5e5ce6; color: #fff; border: none;
+    border-radius: 980px; padding: 7px 15px;
+    font-family: inherit; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all .2s;
+  }
+  .add-btn:hover { background: #4b48d6; transform: scale(1.04); }
+  .add-btn:disabled { background: #d1d1d6; color: #aeaeb2; cursor: not-allowed; transform: none; }
+
+  /* STATE */
+  .state-msg { grid-column: 1/-1; text-align: center; padding: 4rem 2rem; color: #aeaeb2; font-size: 15px; line-height: 1.8; }
+  .spinner { width: 32px; height: 32px; border: 2.5px solid rgba(0,0,0,.08); border-top-color: #5e5ce6; border-radius: 50%; animation: spin .7s linear infinite; margin: 0 auto 1rem; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+
+  /* SYNC BAR */
+  .sync-bar { text-align: center; font-size: 11px; color: #aeaeb2; padding: .35rem 2rem 0; }
+
+  /* OVERLAY */
+  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,.35); backdrop-filter: blur(6px); z-index: 200; opacity: 0; pointer-events: none; transition: opacity .3s; }
+  .overlay.open { opacity: 1; pointer-events: all; }
+
+  /* CART DRAWER */
+  .cart-drawer {
+    position: fixed; top: 0; right: 0;
+    width: min(400px,100vw); height: 100vh;
+    background: rgba(248,248,250,0.95);
+    backdrop-filter: blur(30px) saturate(180%);
+    -webkit-backdrop-filter: blur(30px) saturate(180%);
+    border-left: 0.5px solid rgba(0,0,0,.1);
+    z-index: 300; display: flex; flex-direction: column;
+    transform: translateX(100%);
+    transition: transform .35s cubic-bezier(.4,0,.2,1);
+  }
+  .cart-drawer.open { transform: translateX(0); }
+  .cart-hdr { padding: 1.25rem 1.5rem 1rem; border-bottom: 0.5px solid rgba(0,0,0,.07); display: flex; align-items: center; justify-content: space-between; }
+  .cart-hdr h2 { font-size: 17px; font-weight: 600; color: #1d1d1f; letter-spacing: -.02em; }
+  .close-btn { background: rgba(0,0,0,.06); border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer; font-size: 13px; color: #6e6e73; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+  .close-btn:hover { background: rgba(0,0,0,.1); }
+
+  .cart-items { flex: 1; overflow-y: auto; padding: 1rem 1.5rem; display: flex; flex-direction: column; gap: .65rem; }
+  .cart-items::-webkit-scrollbar { width: 3px; }
+  .cart-items::-webkit-scrollbar-thumb { background: rgba(0,0,0,.12); border-radius: 2px; }
+
+  .cart-item { background: rgba(255,255,255,.8); border: 0.5px solid rgba(0,0,0,.07); border-radius: 14px; padding: .9rem 1rem; display: flex; flex-direction: column; gap: .4rem; }
+  .ci-name { font-size: 13px; font-weight: 600; color: #1d1d1f; line-height: 1.3; }
+  .ci-specs { font-size: 11px; color: #aeaeb2; }
+  .ci-bottom { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-top: .1rem; }
+  .qty { display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,.05); border-radius: 980px; padding: 3px 10px; }
+  .qty button { background: none; border: none; color: #1d1d1f; cursor: pointer; font-size: 15px; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; border-radius: 50%; transition: background .15s; }
+  .qty button:hover { background: rgba(0,0,0,.08); }
+  .qty span { font-size: 13px; font-weight: 600; min-width: 18px; text-align: center; }
+  .ci-price { font-size: 14px; font-weight: 700; color: #1d1d1f; }
+  .rm-btn { background: none; border: none; color: #aeaeb2; cursor: pointer; font-size: 11px; transition: color .15s; }
+  .rm-btn:hover { color: #ff3b30; }
+
+  .cart-empty { text-align: center; padding: 3rem 1rem; color: #aeaeb2; font-size: 14px; line-height: 1.7; }
+
+  .cart-ftr { padding: 1.25rem 1.5rem; border-top: 0.5px solid rgba(0,0,0,.07); display: flex; flex-direction: column; gap: .9rem; }
+  .cart-total { display: flex; justify-content: space-between; align-items: center; }
+  .cart-total span:first-child { font-size: 13px; color: #6e6e73; }
+  .total-price { font-size: 22px; font-weight: 700; color: #1d1d1f; letter-spacing: -.03em; }
+
+  .note-input {
+    background: rgba(255,255,255,.8); border: 0.5px solid rgba(0,0,0,.1);
+    color: #1d1d1f; padding: 10px 12px; border-radius: 12px;
+    font-family: inherit; font-size: 13px; resize: none; outline: none; width: 100%;
+    transition: border-color .2s;
+  }
+  .note-input:focus { border-color: rgba(94,92,230,.5); }
+  .note-input::placeholder { color: #aeaeb2; }
+
+  .wa-btn {
+    background: #34c759; color: #fff; border: none;
+    padding: 14px; border-radius: 14px; cursor: pointer;
+    font-family: inherit; font-weight: 600; font-size: 15px;
+    width: 100%; display: flex; align-items: center; justify-content: center; gap: 9px;
+    transition: all .2s; letter-spacing: -.01em;
+  }
+  .wa-btn:hover { background: #2db54e; }
+  .wa-btn:disabled { background: #d1d1d6; color: #aeaeb2; cursor: not-allowed; }
+
+  /* TOAST */
+  .toast {
+    position: fixed; bottom: 2rem; left: 50%;
+    transform: translateX(-50%) translateY(16px);
+    background: rgba(255,255,255,.92); border: 0.5px solid rgba(0,0,0,.1);
+    color: #1d1d1f; padding: 9px 18px; border-radius: 980px;
+    font-size: 13px; font-weight: 500;
+    backdrop-filter: blur(20px);
+    opacity: 0; transition: all .3s; z-index: 999; white-space: nowrap; pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  @media(max-width:600px) {
+    .hero { padding: 3rem 1.25rem 2rem; }
+    .grid { padding: 0 1rem 4rem; gap: .75rem; }
+    .controls { padding: 1rem 1rem .75rem; }
+    .controls-panel { width: calc(100% - 1rem); padding: .8rem; border-radius: 20px; }
+    .stat-pill { min-width: calc(50% - .4rem); flex: 1; }
+    .toolbar-row { align-items: stretch; }
+    .toolbar-actions { width: 100%; }
+    .sort-select, .ghost-btn { width: 100%; }
+  }
+  /* FOOTER */
+  .site-footer {
+    margin-top: 2rem;
+    padding: 2.5rem 2rem;
+    border-top: 0.5px solid rgba(0,0,0,0.08);
+    background: rgba(255,255,255,0.45);
+    backdrop-filter: blur(20px) saturate(160%);
+    -webkit-backdrop-filter: blur(20px) saturate(160%);
+  }
+  .footer-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+  }
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: .3rem;
+  }
+  .footer-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1d1d1f;
+    letter-spacing: -.01em;
+  }
+  .footer-tagline {
+    font-size: 12px;
+    color: #aeaeb2;
+  }
+  .footer-social {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+  }
+  .footer-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255,255,255,0.7);
+    border: 0.5px solid rgba(0,0,0,0.1);
+    border-radius: 980px;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    color: #1d1d1f;
+    text-decoration: none;
+    transition: background .2s, transform .2s;
+    backdrop-filter: blur(10px);
+  }
+  .footer-pill:hover { background: rgba(255,255,255,.95); transform: translateY(-1px); }
+  .footer-pill svg { flex-shrink: 0; }
+  .footer-divider {
+    width: 0.5px;
+    height: 28px;
+    background: rgba(0,0,0,0.1);
+  }
+  .footer-pragma {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: .25rem;
+  }
+  .footer-copy {
+    font-size: 11px;
+    color: #aeaeb2;
+  }
+  .footer-link {
+    font-size: 12px;
+    font-weight: 500;
+    color: #5e5ce6;
+    text-decoration: none;
+    transition: opacity .2s;
+  }
+  .footer-link:hover { opacity: .7; }
+  @media(max-width: 600px) {
+    .footer-inner { flex-direction: column; align-items: flex-start; }
+    .footer-pragma { align-items: flex-start; }
+    .footer-social { flex-wrap: wrap; }
+  }
+
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    Macbooks Cordoba &amp; Altatech
+  </div>
+  <button id="cart-btn" onclick="toggleCart()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    Carrito
+    <span id="cart-count">0</span>
+  </button>
+</header>
+
+<section class="hero">
+  <div class="hero-eyebrow" id="hero-eyebrow">Stock en tiempo real</div>
+  <h1>Tu próximo<br><span id="hero-category">MacBook</span> ideal</h1>
+  <p id="hero-sub">Venta de Tecnología. Entrega a domicilio en Cordoba.</p>
+  <p id="hero-sub">Envíos a todo el país.</p>
+</section>
+
+<div class="controls">
+  <div class="controls-panel">
+    <div class="search-wrap">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#aeaeb2" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="search-box" type="text" id="search" placeholder="Buscar modelo, chip, color, capacidad..." oninput="handleSearchInput()">
+    </div>
+    <br>
+    <div class="stats-strip" id="stats-strip"></div>
+<br>
+    <div class="filters-panel-grid">
+      <div class="filter-group" id="group-category">
+        <div class="group-head">
+          <div class="group-title">Categoría</div>
+          <div class="group-meta" id="category-meta"></div>
+        </div>
+        <div class="filter-row" id="filters"></div>
+      </div>
+
+      <div class="filter-group" id="group-estado">
+        <div class="group-head">
+          <div class="group-title">Estado</div>
+          <div class="group-meta">Solo opciones con stock real cargado</div>
+        </div>
+        <div class="filter-row" id="estado-filters"></div>
+      </div>
+
+      <div class="filter-group" id="group-capacidad">
+        <div class="group-head">
+          <div class="group-title">Capacidad</div>
+          <div class="group-meta" id="capacidad-meta"></div>
+        </div>
+        <div class="filter-row" id="capacidad-filters"></div>
+      </div>
+
+      <div class="filter-group" id="group-color">
+        <div class="group-head">
+          <div class="group-title">Color</div>
+          <div class="group-meta" id="color-meta"></div>
+        </div>
+        <div class="filter-row" id="color-filters"></div>
+      </div>
+
+      <div class="filter-group" id="group-marca">
+        <div class="group-head">
+          <div class="group-title">Marca</div>
+          <div class="group-meta" id="marca-meta"></div>
+        </div>
+        <div class="filter-row" id="marca-filters"></div>
+      </div>
+
+      <div class="filter-group" id="group-producto">
+        <div class="group-head">
+          <div class="group-title">Producto</div>
+          <div class="group-meta" id="producto-meta"></div>
+        </div>
+        <div class="filter-row" id="producto-filters"></div>
+      </div>
+
+      <div class="toolbar-row">
+        <div class="active-filters" id="active-filters"></div>
+        <div class="toolbar-actions">
+          <select class="sort-select" id="sort-select" onchange="renderProducts()">
+            <option value="featured">Ordenar: destacados</option>
+            <option value="price-asc">Precio: menor a mayor</option>
+            <option value="price-desc">Precio: mayor a menor</option>
+            <option value="name-asc">Nombre: A a Z</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="results-info" id="results-info"></div>
+
+<main class="grid" id="grid">
+  <div class="state-msg"><div class="spinner"></div>Cargando productos...</div>
+</main>
+
+<div class="sync-bar" id="sync-bar"></div>
+
+<div class="overlay" id="overlay" onclick="toggleCart()"></div>
+
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-hdr">
+    <h2>Tu pedido</h2>
+    <button class="close-btn" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cart-items"></div>
+  <div class="cart-ftr">
+    <div class="cart-total">
+      <span>Total estimado</span>
+      <span class="total-price" id="cart-total">USD 0</span>
+    </div>
+    <textarea class="note-input" id="cart-note" rows="2" placeholder="Nota: direccion, consulta, preferencias..."></textarea>
+    <button class="wa-btn" id="wa-btn" onclick="sendWhatsApp()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      Enviar pedido por WhatsApp
+    </button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Floating clear filters button -->
+<button class="fab-clear" id="fab-clear" onclick="clearAllFilters()" style="display:none">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  Limpiar filtros
+</button>
+
+<script>
+var API_URL = 'https://script.google.com/macros/s/AKfycbzhNBlRd1XLJBY8KQesfjpuwtTrqUMrwMcDyCfN1UMEgaO6MfjqYFTXcI12CTss43jQwg/exec';
+var WA_NUMBER = '5493512017209';
+var allProducts = [];
+var cart = [];
+
+// ── MULTI-SELECT FILTER STATE ─────────────────────────────────
+// Each filter is a Set. Empty set = "Todos" (no restriction)
+var selCategory  = {};  // single select (category drives hero)
+var selEstado    = {};  // Set keys
+var selCapacidad = {};
+var selColor     = {};
+var selMarca     = {};
+var selProducto  = {};
+var activeFilter = 'Todos'; // kept for hero/compat
+
+function setOf(obj) { return Object.keys(obj); }
+function has(obj, v) { return obj.hasOwnProperty(v); }
+function isEmpty(obj) { return Object.keys(obj).length === 0; }
+
+function toggle(obj, val) {
+  if (val === 'Todos') { clearObj(obj); return; }
+  if (has(obj, val)) delete obj[val]; else obj[val] = true;
+}
+function clearObj(obj) { Object.keys(obj).forEach(function(k){ delete obj[k]; }); }
+
+// ── HERO ──────────────────────────────────────────────────────
+var heroTexts = {
+  'Todos':        { cat: 'MacBook', sub: 'Equipos Apple nuevos sellados con garantia oficial. Entrega en Cordoba.' },
+  'MacBook Air':  { cat: 'MacBook Air', sub: 'Ligereza y potencia. El mas vendido de Apple.' },
+  'MacBook Pro':  { cat: 'MacBook Pro', sub: 'Rendimiento profesional para los que exigen mas.' },
+  'iPhone':       { cat: 'iPhone', sub: 'La experiencia iPhone con garantia oficial.' },
+  'iPad':         { cat: 'iPad', sub: 'Productividad y creatividad en tus manos.' },
+  'Apple Watch':  { cat: 'Apple Watch', sub: 'El reloj mas avanzado del mundo.' },
+  'AirPods':      { cat: 'AirPods', sub: 'Audio Apple sin cables, sin compromisos.' },
+  'iMac':         { cat: 'iMac', sub: 'Potencia y diseno en un solo equipo.' },
+  'Mac mini':     { cat: 'Mac mini', sub: 'El Mac mas compacto y versatil.' },
+  'Mac Studio':   { cat: 'Mac Studio', sub: 'Poder de estudio en un espacio minimo.' },
+};
+
+function updateHero(cat) {
+  var data = heroTexts[cat] || { cat: cat, sub: 'Stock disponible con garantia oficial. Entrega en Cordoba.' };
+  var el = document.getElementById('hero-category');
+  var sub = document.getElementById('hero-sub');
+  var eyebrow = document.getElementById('hero-eyebrow');
+  el.style.opacity = '0'; el.style.transform = 'translateY(6px)';
+  setTimeout(function() {
+    el.textContent = data.cat; sub.textContent = data.sub;
+    if (cat !== 'Todos') {
+      var count = allProducts.filter(function(p){ return p.categoria === cat; }).length;
+      eyebrow.textContent = count + ' equipo' + (count!==1?'s':'') + ' disponibles';
+    } else { eyebrow.textContent = 'Stock en tiempo real'; }
+    el.style.opacity = '1'; el.style.transform = 'translateY(0)';
+  }, 180);
+}
+
+// ── ESTADO CONFIG ─────────────────────────────────────────────
+var estadoConfig = [
+  { key: 'disponible', label: 'Disponible',  className: 'green',  matches: ['disp','disponible'] },
+  { key: 'transito',   label: 'En transito', className: 'orange', matches: ['trans','transito','camino'] },
+  { key: 'pedido',     label: 'A pedido',    className: 'violet', matches: ['pedido','encargo','orden'] },
+];
+
+function matchesEstado(estadoVal, keys) {
+  var n = norm(estadoVal);
+  for (var i=0;i<keys.length;i++) { if (n.indexOf(keys[i])>=0) return true; }
+  return false;
+}
+
+function getEstadoKey(estadoVal) {
+  for (var i=0;i<estadoConfig.length;i++) {
+    if (matchesEstado(estadoVal, estadoConfig[i].matches)) return estadoConfig[i].key;
+  }
+  return null;
+}
+
+// ── FILTERING ────────────────────────────────────────────────
+function getFilteredProducts(opts) {
+  opts = opts || {};
+  return allProducts.filter(function(p) {
+    var q = norm(document.getElementById('search').value);
+    var haystack = norm([p.producto,p.marca,p.capacidad,p.color,p.categoria,p.estado].join(' '));
+    var matchQ = !q || haystack.indexOf(q) >= 0;
+    var matchCat = opts.ignoreCategory || isEmpty(selCategory) || has(selCategory, p.categoria);
+    var matchEstado = true;
+    if (!opts.ignoreEstado && !isEmpty(selEstado)) {
+      var ekey = getEstadoKey(p.estado);
+      matchEstado = ekey && has(selEstado, ekey);
+    }
+    var matchCap  = opts.ignoreCapacidad || isEmpty(selCapacidad) || has(selCapacidad, p.capacidad);
+    var matchColor = opts.ignoreColor    || isEmpty(selColor)     || has(selColor, p.color);
+    var matchMarca = opts.ignoreMarca    || isEmpty(selMarca)     || has(selMarca, p.marca);
+    var matchProd  = opts.ignoreProducto || isEmpty(selProducto)  || has(selProducto, p.producto);
+    return matchQ && matchCat && matchEstado && matchCap && matchColor && matchMarca && matchProd;
+  });
+}
+
+// ── FACET BUTTON ─────────────────────────────────────────────
+function makeFacetButton(label, val, count, active, clickFn, extraCls) {
+  var isTodos = val === 'Todos';
+  return '<button class="facet-btn ' + (extraCls||'') + (active ? ' active' : '') +
+    '" onclick="' + clickFn + '(this)" data-val="' + esc(val) + '">' +
+    (isTodos ? '' : '<span class="facet-check">' + (active ? '✓' : '') + '</span>') +
+    '<span>' + esc(label) + '</span>' +
+    '<span class="facet-count">' + count + '</span></button>';
+}
+
+// ── BUILD FILTERS ────────────────────────────────────────────
+function buildCategoryFilters() {
+  var source = getFilteredProducts({ignoreCategory:true});
+  var counts = {};
+  source.forEach(function(p){ counts[p.categoria] = (counts[p.categoria]||0)+1; });
+  var cats = Object.keys(counts).sort();
+  var html = makeFacetButton('Todos','Todos', source.length, isEmpty(selCategory), 'catClick', '');
+  cats.forEach(function(c){
+    html += makeFacetButton(c, c, counts[c], has(selCategory,c), 'catClick', '');
+  });
+  document.getElementById('filters').innerHTML = html;
+  document.getElementById('category-meta').textContent = cats.length + ' categorias activas';
+}
+
+function buildEstadoFilters() {
+  var source = getFilteredProducts({ignoreEstado:true});
+  var group = document.getElementById('group-estado');
+  var present = estadoConfig.map(function(cfg){
+    var count = source.filter(function(p){ return matchesEstado(p.estado, cfg.matches); }).length;
+    return Object.assign({}, cfg, { count: count });
+  }).filter(function(cfg){ return cfg.count > 0; });
+  if (present.length <= 1) { group.style.display = 'none'; clearObj(selEstado); return; }
+  group.style.display = 'block';
+  var html = makeFacetButton('Todos los estados','Todos', source.length, isEmpty(selEstado), 'estadoClick', '');
+  present.forEach(function(cfg){
+    html += makeFacetButton(cfg.label, cfg.key, cfg.count, has(selEstado,cfg.key), 'estadoClick', cfg.className);
+  });
+  document.getElementById('estado-filters').innerHTML = html;
+}
+
+function buildFacetGeneric(field, containerId, groupId, metaId, label0, clickFn, extraCls, ignoreKey, sortFn) {
+  var opts = {}; opts[ignoreKey] = true;
+  var source = getFilteredProducts(opts);
+  var group = document.getElementById(groupId);
+  var counts = {};
+  source.forEach(function(p){ if (p[field]) counts[p[field]] = (counts[p[field]]||0)+1; });
+  var vals = Object.keys(counts);
+  if (!vals.length || (vals.length <= 1 && field !== 'marca' && field !== 'producto')) {
+    group.style.display = 'none'; return;
+  }
+  if (!vals.length) { group.style.display = 'none'; return; }
+  vals.sort(sortFn || function(a,b){ return a.localeCompare(b); });
+  var sel = fieldToSel(field);
+  group.style.display = 'block';
+  var html = makeFacetButton(label0,'Todos', source.length, isEmpty(sel), clickFn, extraCls);
+  vals.forEach(function(v){
+    html += makeFacetButton(v, v, counts[v], has(sel,v), clickFn, extraCls);
+  });
+  document.getElementById(containerId).innerHTML = html;
+  if (metaId) document.getElementById(metaId).textContent = vals.length + ' opciones';
+}
+
+function fieldToSel(field) {
+  var map = { capacidad: selCapacidad, color: selColor, marca: selMarca, producto: selProducto };
+  return map[field];
+}
+
+function buildCapacidadFilters() {
+  buildFacetGeneric('capacidad','capacidad-filters','group-capacidad','capacidad-meta',
+    'Toda capacidad','capClick','dark','ignoreCapacidad',
+    function(a,b){ var na=parseInt(a),nb=parseInt(b); return (!isNaN(na)&&!isNaN(nb))? na-nb : a.localeCompare(b); });
+  var el = document.getElementById('capacidad-meta');
+  if (el) el.textContent = Object.keys({}).length; // updated below
+}
+function buildColorFilters()    { buildFacetGeneric('color','color-filters','group-color','color-meta','Todos los colores','colorClick','','ignoreColor'); }
+function buildMarcaFilters()    { buildFacetGeneric('marca','marca-filters','group-marca','marca-meta','Todas las marcas','marcaClick','','ignoreMarca'); }
+function buildProductoFilters() { buildFacetGeneric('producto','producto-filters','group-producto','producto-meta','Todos los modelos','productoClick','dark','ignoreProducto'); }
+
+// ── TOGGLE HANDLERS ──────────────────────────────────────────
+function catClick(btn) {
+  var val = btn.getAttribute('data-val');
+  // Category is single-select (drives hero)
+  if (val === 'Todos') { clearObj(selCategory); activeFilter = 'Todos'; }
+  else { clearObj(selCategory); selCategory[val] = true; activeFilter = val; }
+  updateHero(activeFilter);
+  renderProducts();
+}
+
+function estadoClick(btn) {
+  var val = btn.getAttribute('data-val');
+  if (val === 'Todos') clearObj(selEstado); else toggle(selEstado, val);
+  renderProducts();
+}
+function capClick(btn)      { var v=btn.getAttribute('data-val'); if(v==='Todos') clearObj(selCapacidad); else toggle(selCapacidad,v); renderProducts(); }
+function colorClick(btn)    { var v=btn.getAttribute('data-val'); if(v==='Todos') clearObj(selColor);     else toggle(selColor,v);     renderProducts(); }
+function marcaClick(btn)    { var v=btn.getAttribute('data-val'); if(v==='Todos') clearObj(selMarca);     else toggle(selMarca,v);     renderProducts(); }
+function productoClick(btn) { var v=btn.getAttribute('data-val'); if(v==='Todos') clearObj(selProducto);  else toggle(selProducto,v);  renderProducts(); }
+
+function handleSearchInput() { renderProducts(); }
+
+// ── STATS ────────────────────────────────────────────────────
+function updateStats(filtered) {
+  var total = filtered.length;
+  var disponibles = filtered.filter(function(p){ return isAvailable(p.estado); }).length;
+  var categorias = {};
+  filtered.forEach(function(p){ categorias[p.categoria] = true; });
+  document.getElementById('stats-strip').innerHTML = [
+    '<div class="stat-pill"><div class="stat-label">Resultados</div><div class="stat-value">'+total+'</div></div>',
+    '<div class="stat-pill"><div class="stat-label">Disponibles</div><div class="stat-value">'+disponibles+'</div></div>',
+    '<div class="stat-pill"><div class="stat-label">Categorias</div><div class="stat-value">'+Object.keys(categorias).length+'</div></div>'
+  ].join('');
+}
+
+// ── ACTIVE CHIPS ─────────────────────────────────────────────
+function updateActiveChips() {
+  var chips = [];
+  setOf(selCategory).forEach(function(v){ chips.push({label:'Categoria: '+v, fn:'clearCat(\''+v+'\')'}); });
+  setOf(selEstado).forEach(function(v){
+    var cfg = estadoConfig.filter(function(c){ return c.key===v; })[0];
+    chips.push({label:'Estado: '+(cfg?cfg.label:v), fn:'clearEst(\''+v+'\')'});
+  });
+  setOf(selCapacidad).forEach(function(v){ chips.push({label:'Cap: '+v,     fn:'clearCap(\''+v+'\')'}); });
+  setOf(selColor).forEach(function(v){     chips.push({label:'Color: '+v,   fn:'clearCol(\''+v+'\')'}); });
+  setOf(selMarca).forEach(function(v){     chips.push({label:'Marca: '+v,   fn:'clearMar(\''+v+'\')'}); });
+  setOf(selProducto).forEach(function(v){  chips.push({label:'Modelo: '+v,  fn:'clearPro(\''+v+'\')'}); });
+  var q = document.getElementById('search').value.trim();
+  if (q) chips.push({label:'Busqueda: '+q, fn:'clearSearch()'});
+
+  var fab = document.getElementById('fab-clear');
+  if (fab) fab.style.display = chips.length ? 'flex' : 'none';
+
+  document.getElementById('active-filters').innerHTML = chips.length
+    ? chips.map(function(ch){
+        return '<span class="active-chip">'+esc(ch.label)+'<span class="chip-x" onclick="'+ch.fn+'">✕</span></span>';
+      }).join('')
+    : '<span class="group-meta">Sin filtros activos.</span>';
+}
+
+function clearCat(v) { delete selCategory[v]; activeFilter = isEmpty(selCategory)?'Todos':setOf(selCategory)[0]; updateHero(activeFilter); renderProducts(); }
+function clearEst(v) { delete selEstado[v];    renderProducts(); }
+function clearCap(v) { delete selCapacidad[v]; renderProducts(); }
+function clearCol(v) { delete selColor[v];     renderProducts(); }
+function clearMar(v) { delete selMarca[v];     renderProducts(); }
+function clearPro(v) { delete selProducto[v];  renderProducts(); }
+function clearSearch() { document.getElementById('search').value=''; renderProducts(); }
+
+function clearAllFilters() {
+  clearObj(selCategory); clearObj(selEstado); clearObj(selCapacidad);
+  clearObj(selColor); clearObj(selMarca); clearObj(selProducto);
+  activeFilter = 'Todos';
+  document.getElementById('search').value = '';
+  var ss = document.getElementById('sort-select');
+  if (ss) ss.value = 'featured';
+  updateHero('Todos');
+  renderProducts();
+}
+
+function refreshFacets() {
+  buildCategoryFilters();
+  buildEstadoFilters();
+  buildCapacidadFilters();
+  buildColorFilters();
+  buildMarcaFilters();
+  buildProductoFilters();
+  updateHero(activeFilter);
+  updateActiveChips();
+}
+
+function setFilter(cat) { // kept for compat
+  clearObj(selCategory);
+  if (cat !== 'Todos') selCategory[cat] = true;
+  activeFilter = cat;
+  updateHero(cat);
+  renderProducts();
+}
+
+
+function norm(s) {
+  return String(s||'').toLowerCase()
+    .replace(/[áàä]/g,'a').replace(/[éèë]/g,'e')
+    .replace(/[íìï]/g,'i').replace(/[óòö]/g,'o')
+    .replace(/[úùü]/g,'u').replace(/ñ/g,'n').trim();
+}
+
+function col(obj, candidates) {
+  var keys = Object.keys(obj);
+  for (var c=0;c<candidates.length;c++) {
+    for (var k=0;k<keys.length;k++) {
+      if (norm(keys[k]).indexOf(norm(candidates[c]))>=0) {
+        var v = String(obj[keys[k]]||'').trim();
+        if (v) return v;
+      }
+    }
+  }
+  return '';
+}
+
+function parsePrice(str) {
+  if (!str) return 0;
+  var clean = str.replace(/[^0-9.,]/g,'');
+  if (!clean) return 0;
+  var parts = clean.split('.');
+  if (parts.length>=2) {
+    var last = parts[parts.length-1];
+    if (last.length===3 || parts.length>2) clean = parts.join('');
+  }
+  clean = clean.replace(/,/g,'');
+  return parseFloat(clean)||0;
+}
+
+function formatPrice(n) {
+  return 'USD ' + Math.round(n).toLocaleString('es-AR');
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function escAttr(s) { return String(s||'').replace(/'/g,"\\'"); }
+
+async function loadSheet() {
+  try {
+    var res = await fetch(API_URL);
+    if (!res.ok) throw new Error('HTTP '+res.status);
+    var text = await res.text();
+    var rows;
+    try { rows = JSON.parse(text); } catch(e) { throw new Error('Respuesta invalida'); }
+    if (!Array.isArray(rows)) throw new Error('Formato inesperado');
+
+    var skipWords = ['actualizacion','proxima','equipos apple','entrega','cada'];
+    allProducts = rows.filter(function(r) {
+      var p = col(r,['producto','nombre','product']);
+      if (!p || p.length<2) return false;
+      var pn = norm(p);
+      for (var i=0;i<skipWords.length;i++) { if(pn.indexOf(skipWords[i])>=0) return false; }
+      return true;
+    }).map(function(r,i) {
+      return {
+        id: i,
+        producto:  col(r,['producto','nombre','product']),
+        marca:     col(r,['marca','brand','fabricante']),
+        capacidad: col(r,['capacidad','storage','almacenamiento']),
+        color:     col(r,['color','colour']),
+        precio:    parsePrice(col(r,['precio venta','precio','price','valor'])),
+        estado:    col(r,['estado','status','disponibilidad','stock'])||'Disponible',
+        categoria: r['_sheet']||col(r,['categoria','category','tipo'])||'MacBook',
+      };
+    });
+
+    if (!allProducts.length) throw new Error('No se encontraron productos. Verifica que las hojas tengan columna PRODUCTO.');
+    refreshFacets();
+    renderProducts();
+    document.getElementById('sync-bar').textContent =
+      'Actualizado ' + new Date().toLocaleTimeString('es-AR') + ' · ' + allProducts.length + ' equipos';
+  } catch(e) {
+    document.getElementById('grid').innerHTML =
+      '<div class="state-msg"><b style="color:#ff3b30">No se pudo cargar</b><br><small>'+e.message+'</small><br><br>'+
+      '<button onclick="loadSheet()" style="margin-top:1rem;background:#5e5ce6;color:#fff;border:none;padding:9px 22px;border-radius:980px;cursor:pointer;font-size:14px;font-weight:600;font-family:inherit;">Reintentar</button></div>';
+    console.error(e);
+  }
+}
+
+function isAvailable(estado) {
+  var s = norm(estado);
+  return s.indexOf('agot')===-1 && s.indexOf('no disp')===-1 && s.indexOf('sin stock')===-1 && s.indexOf('vendido')===-1;
+}
+
+function renderProducts() {
+  var filtered = getFilteredProducts({});
+  var sortMode = document.getElementById('sort-select') ? document.getElementById('sort-select').value : 'featured';
+
+  filtered.sort(function(a,b){
+    if (sortMode === 'price-asc') return (a.precio||9999999) - (b.precio||9999999);
+    if (sortMode === 'price-desc') return (b.precio||0) - (a.precio||0);
+    if (sortMode === 'name-asc') return String(a.producto||'').localeCompare(String(b.producto||''));
+    var aw = isAvailable(a.estado) ? 0 : 1;
+    var bw = isAvailable(b.estado) ? 0 : 1;
+    if (aw !== bw) return aw - bw;
+    return String(a.producto||'').localeCompare(String(b.producto||''));
+  });
+
+  refreshFacets();
+  updateStats(filtered);
+
+  document.getElementById('results-info').textContent =
+    filtered.length + ' equipo' + (filtered.length!==1?'s':'') + ' encontrados';
+
+  var grid = document.getElementById('grid');
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="state-msg">No hay resultados con esa combinacion de filtros.<br>Proba limpiando alguno para ampliar el catalogo.</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(function(p,idx) {
+    var avail = isAvailable(p.estado);
+    var sc = avail ? 'status-disp' : (norm(p.estado).indexOf('agot')>=0?'status-agot':'status-otro');
+    var specs = [p.capacidad,p.color].filter(Boolean);
+    var delay = (idx%24)*25;
+    return '<div class="card" style="animation-delay:'+delay+'ms">'+
+      '<div class="card-top">'+
+        '<span class="sheet-tag">'+esc(p.categoria)+'</span>'+
+        '<span class="'+sc+'">'+esc(p.estado)+'</span>'+
+      '</div>'+
+      '<div class="card-name">'+esc(p.producto)+'</div>'+
+      (specs.length?'<div class="card-specs">'+specs.map(function(s){return '<span class="spec">'+esc(s)+'</span>';}).join('')+'</div>':'')+
+      '<div class="card-footer">'+
+        '<div><div class="price-lbl">Precio</div><div class="price">'+(p.precio?formatPrice(p.precio):'Consultar')+'</div></div>'+
+        '<button class="add-btn" onclick="addToCart('+p.id+')"'+(avail?'':' disabled')+'>'+(avail?'+ Agregar':'Agotado')+'</button>'+
+      '</div></div>';
+  }).join('');
+}
+
+function addToCart(id) {
+  var p = allProducts.find(function(x){return x.id===id;});
+  if (!p) return;
+  var ex = cart.find(function(x){return x.id===id;});
+  if (ex) ex.qty++; else cart.push(Object.assign({},p,{qty:1}));
+  updateCartUI();
+  showToast('Agregado: '+p.producto);
+}
+function removeFromCart(id) { cart=cart.filter(function(x){return x.id!==id;}); updateCartUI(); }
+function changeQty(id,delta) {
+  var item=cart.find(function(x){return x.id===id;});
+  if (!item) return;
+  item.qty+=delta;
+  if (item.qty<=0) removeFromCart(id); else updateCartUI();
+}
+
+function updateCartUI() {
+  var count = cart.reduce(function(a,x){return a+x.qty;},0);
+  document.getElementById('cart-count').textContent = count;
+  var total = cart.reduce(function(a,x){return a+(x.precio*x.qty);},0);
+  document.getElementById('cart-total').textContent = formatPrice(total);
+  var wrap = document.getElementById('cart-items');
+  if (!cart.length) {
+    wrap.innerHTML = '<div class="cart-empty">Tu carrito esta vacio.<br>Agrega productos del catalogo.</div>';
+    document.getElementById('wa-btn').disabled = true;
+    return;
+  }
+  document.getElementById('wa-btn').disabled = false;
+  wrap.innerHTML = cart.map(function(item){
+    var specs = [item.capacidad,item.color].filter(Boolean).join(' · ');
+    return '<div class="cart-item">'+
+      '<div class="ci-name">'+esc(item.producto)+'</div>'+
+      (specs?'<div class="ci-specs">'+esc(specs)+'</div>':'')+
+      '<div class="ci-bottom">'+
+        '<div class="qty">'+
+          '<button onclick="changeQty('+item.id+',-1)">−</button>'+
+          '<span>'+item.qty+'</span>'+
+          '<button onclick="changeQty('+item.id+',1)">+</button>'+
+        '</div>'+
+        '<span class="ci-price">'+(item.precio?formatPrice(item.precio*item.qty):'Consultar')+'</span>'+
+        '<button class="rm-btn" onclick="removeFromCart('+item.id+')">✕ quitar</button>'+
+      '</div></div>';
+  }).join('');
+}
+
+function toggleCart() {
+  var drawer = document.getElementById('cart-drawer');
+  var fab = document.getElementById('fab-clear');
+  drawer.classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+  if (drawer.classList.contains('open')) fab.classList.add('cart-open');
+  else fab.classList.remove('cart-open');
+}
+
+function sendWhatsApp() {
+  if (!cart.length) return;
+  var note = document.getElementById('cart-note').value.trim();
+  var total = cart.reduce(function(a,x){return a+(x.precio*x.qty);},0);
+  var msg = 'Nuevo pedido - Macbooks Cordoba & Altatech\n\n';
+  cart.forEach(function(item){
+    var specs = [item.capacidad,item.color].filter(Boolean).join(' - ');
+    msg += '▸ '+item.producto;
+    if (specs) msg += ' ('+specs+')';
+    msg += ' x'+item.qty;
+    if (item.precio) msg += '  =  '+formatPrice(item.precio*item.qty);
+    msg += '\n';
+  });
+  msg += '\nTotal estimado: '+formatPrice(total);
+  if (note) msg += '\n\nNota: '+note;
+  msg += '\n\nPedido desde catalogo online';
+  window.open('https://wa.me/'+WA_NUMBER+'?text='+encodeURIComponent(msg),'_blank');
+}
+
+function showToast(msg) {
+  var t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2200);
+}
+
+updateCartUI();
+loadSheet();
+setInterval(loadSheet, 5*60*1000);
+</script>
+<footer class="site-footer">
+  <div class="footer-inner">
+
+    <div class="footer-brand">
+      <div class="footer-name">Macbooks Cordoba &amp; Altatech</div>
+      <div class="footer-tagline">Equipos Apple con garantia oficial · Cordoba, Argentina</div>
+    </div>
+
+    <div class="footer-social">
+      <a class="footer-pill" href="https://wa.me/5493512017209" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+        +54 9 351 201-7209
+      </a>
+
+      <a class="footer-pill" href="https://instagram.com/macbookscordoba" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <defs>
+            <linearGradient id="ig" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#f09433"/>
+              <stop offset="50%" stop-color="#dc2743"/>
+              <stop offset="100%" stop-color="#bc1888"/>
+            </linearGradient>
+          </defs>
+          <rect x="2" y="2" width="20" height="20" rx="5" stroke="url(#ig)"/>
+          <circle cx="12" cy="12" r="4" stroke="url(#ig)"/>
+          <circle cx="17.5" cy="6.5" r="1.2" fill="#dc2743" stroke="none"/>
+        </svg>
+        @macbookscordoba
+      </a>
+    </div>
+
+    <div class="footer-pragma">
+      <div class="footer-copy">Desarrollado por Pragma Studio</div>
+      <a href="https://www.pragmastudio.com.ar" target="_blank" class="footer-link">www.pragmastudio.com.ar</a>
+    </div>
+
+  </div>
+</footer>
