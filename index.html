@@ -459,16 +459,19 @@
     .footer-social { flex-wrap: wrap; }
   }
 
+  .canje-btn {
+    background: rgba(255,255,255,0.7);
+    border: 0.5px solid rgba(94,92,230,0.3);
+    color: #5e5ce6;
+    padding: 6px 14px; border-radius: 980px;
+    font-family: inherit; font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+    text-decoration: none; backdrop-filter: blur(10px);
+    transition: background .2s;
+  }
+  .canje-btn:hover { background: rgba(94,92,230,0.1); }
+
 </style>
-
-<!-- Vercel Web Analytics -->
-<script>
-  window.va = window.va || function () { 
-    (window.vaq = window.vaq || []).push(arguments); 
-  };
-</script>
-<script defer src="/_vercel/insights/script.js"></script>
-
 </head>
 <body>
 
@@ -477,6 +480,10 @@
     <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
     Macbooks Cordoba &amp; Altatech
   </div>
+  <a href="canje.html" class="canje-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+    Plan Canje
+  </a>
   <button id="cart-btn" onclick="toggleCart()">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
     Carrito
@@ -486,9 +493,8 @@
 
 <section class="hero">
   <div class="hero-eyebrow" id="hero-eyebrow">Stock en tiempo real</div>
-  <h1>Tu próximo<br><span id="hero-category">MacBook</span> ideal</h1>
-  <p id="hero-sub">Venta de Tecnología. Entrega a domicilio en Cordoba.</p>
-  <p id="hero-sub">Envíos a todo el país.</p>
+  <h1>Tu proximo<br><span id="hero-category">MacBook</span> ideal</h1>
+  <p id="hero-sub">Equipos Apple nuevos sellados con garantia oficial. Entrega en Cordoba.</p>
 </section>
 
 <div class="controls">
