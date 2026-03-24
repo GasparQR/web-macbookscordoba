@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Plan Canje — Macbooks Cordoba & Altatech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: -apple-system, 'Inter', sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(160deg, #e8eaf6 0%, #fce4ec 50%, #e3f2fd 100%);
+    background-attachment: fixed;
+    color: #1d1d1f;
+  }
+
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(255,255,255,0.6);
+    backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 0.5px solid rgba(0,0,0,0.1);
+    padding: 0 2rem; height: 52px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo { font-size: 15px; font-weight: 600; color: #1d1d1f; letter-spacing: -.02em; display: flex; align-items: center; gap: 8px; }
+  .back-btn {
+    background: rgba(255,255,255,0.7); border: 0.5px solid rgba(0,0,0,0.12);
+    color: #1d1d1f; padding: 6px 14px; border-radius: 980px; cursor: pointer;
+    font-family: inherit; font-size: 13px; font-weight: 500;
+    display: flex; align-items: center; gap: 6px; text-decoration: none;
+    backdrop-filter: blur(10px); transition: background .2s;
+  }
+  .back-btn:hover { background: rgba(255,255,255,.95); }
+
+  .hero {
+    text-align: center; padding: 4rem 2rem 2.5rem;
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: -80px; left: 50%;
+    transform: translateX(-50%); width: 500px; height: 350px;
+    background: radial-gradient(ellipse, rgba(94,92,230,.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow { font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: #5e5ce6; margin-bottom: .75rem; }
+  .hero h1 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 700; letter-spacing: -.04em; line-height: 1.05; color: #1d1d1f; margin-bottom: .75rem; }
+  .hero h1 span { color: #5e5ce6; }
+  .hero p { font-size: 15px; color: #6e6e73; max-width: 420px; margin: 0 auto; line-height: 1.5; }
+
+  .main { max-width: 560px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+
+  /* STEPS */
+  .steps-bar { display: flex; align-items: center; margin-bottom: 2rem; }
+  .step-item { display: flex; flex-direction: column; align-items: center; flex: 1; }
+  .step-circle {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    background: rgba(255,255,255,0.5); border: 1.5px solid rgba(0,0,0,.12);
+    color: #aeaeb2; transition: all .3s;
+  }
+  .step-circle.active { background: #5e5ce6; border-color: #5e5ce6; color: #fff; box-shadow: 0 4px 16px rgba(94,92,230,.3); }
+  .step-circle.done { background: #34c759; border-color: #34c759; color: #fff; }
+  .step-label { font-size: 11px; color: #aeaeb2; margin-top: 5px; font-weight: 500; transition: color .3s; }
+  .step-label.active { color: #5e5ce6; }
+  .step-label.done { color: #248a3d; }
+  .step-connector { flex: 1; height: 1.5px; background: rgba(0,0,0,.08); margin: 0 4px; margin-bottom: 18px; transition: background .3s; }
+  .step-connector.done { background: #34c759; }
+
+  /* CARD */
+  .card {
+    background: rgba(255,255,255,0.75);
+    border: 0.5px solid rgba(255,255,255,0.9);
+    border-radius: 20px; padding: 1.75rem;
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    animation: fadeUp .4s ease both;
+  }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+  .card-title { font-size: 17px; font-weight: 700; color: #1d1d1f; letter-spacing: -.02em; margin-bottom: .25rem; }
+  .card-sub { font-size: 13px; color: #aeaeb2; margin-bottom: 1.5rem; }
+
+  .field { margin-bottom: 1rem; }
+  .field label { font-size: 11px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: #aeaeb2; display: block; margin-bottom: 6px; }
+  .field select, .field input {
+    width: 100%; background: rgba(255,255,255,0.7); border: 0.5px solid rgba(0,0,0,.12);
+    border-radius: 12px; padding: 11px 14px; font-family: inherit; font-size: 14px;
+    color: #1d1d1f; outline: none; transition: border-color .2s, background .2s;
+    appearance: none; -webkit-appearance: none;
+  }
+  .field select:focus, .field input:focus { border-color: rgba(94,92,230,.5); background: rgba(255,255,255,.95); }
+  .field select:disabled { opacity: .45; cursor: not-allowed; }
+
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+
+  /* ESTADO BUTTONS */
+  .estado-opts { display: flex; gap: .5rem; }
+  .estado-opt {
+    flex: 1; border: 1.5px solid rgba(0,0,0,.1); border-radius: 12px;
+    padding: 10px 8px; text-align: center; font-size: 13px; font-weight: 500;
+    color: #6e6e73; cursor: pointer; transition: all .2s;
+    background: rgba(255,255,255,.5);
+  }
+  .estado-opt:hover { border-color: rgba(94,92,230,.3); color: #5e5ce6; background: rgba(94,92,230,.05); }
+  .estado-opt.active { border-color: #5e5ce6; background: rgba(94,92,230,.1); color: #5e5ce6; font-weight: 600; }
+  .estado-hint { font-size: 11px; color: #aeaeb2; margin-top: 6px; line-height: 1.4; }
+
+  /* RESULT BOX */
+  .result-box {
+    background: linear-gradient(135deg, rgba(240,240,255,.9) 0%, rgba(252,228,236,.9) 100%);
+    border: 0.5px solid rgba(94,92,230,.2);
+    border-radius: 16px; padding: 1.25rem; margin: 1.25rem 0;
+  }
+  .result-row { display: flex; justify-content: space-between; align-items: center; padding: .3rem 0; }
+  .result-row-label { font-size: 13px; color: #6e6e73; }
+  .result-row-val { font-size: 14px; font-weight: 600; }
+  .val-green { color: #248a3d; }
+  .val-red { color: #c0392b; }
+  .result-divider { border: none; border-top: 0.5px solid rgba(94,92,230,.2); margin: .75rem 0; }
+  .result-total-label { font-size: 12px; color: #aeaeb2; margin-bottom: 2px; }
+  .result-total { font-size: 32px; font-weight: 800; color: #5e5ce6; letter-spacing: -.04em; }
+  .result-note { font-size: 11px; color: #aeaeb2; margin-top: 4px; }
+
+  /* BUTTONS */
+  .btn-primary {
+    background: #5e5ce6; color: #fff; border: none;
+    border-radius: 14px; padding: 14px; width: 100%;
+    font-family: inherit; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: all .2s; margin-top: .75rem;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .btn-primary:hover { background: #4b48d6; transform: scale(1.01); }
+  .btn-primary:disabled { background: #d1d1d6; cursor: not-allowed; transform: none; }
+
+  .btn-wa {
+    background: #34c759; color: #fff; border: none;
+    border-radius: 14px; padding: 14px; width: 100%;
+    font-family: inherit; font-size: 15px; font-weight: 600;
+    cursor: pointer; transition: all .2s; margin-top: .75rem;
+    display: flex; align-items: center; justify-content: center; gap: 9px;
+  }
+  .btn-wa:hover { background: #2db54e; }
+
+  .btn-ghost {
+    background: rgba(255,255,255,.6); color: #6e6e73;
+    border: 0.5px solid rgba(0,0,0,.12); border-radius: 14px; padding: 12px;
+    width: 100%; font-family: inherit; font-size: 14px; font-weight: 500;
+    cursor: pointer; transition: all .2s; margin-top: .5rem;
+    backdrop-filter: blur(10px);
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,.9); }
+
+  /* LOADING */
+  .spinner { width: 28px; height: 28px; border: 2.5px solid rgba(94,92,230,.2); border-top-color: #5e5ce6; border-radius: 50%; animation: spin .7s linear infinite; margin: 1.5rem auto; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .load-msg { text-align: center; color: #aeaeb2; font-size: 13px; }
+
+  /* IPHONE NUEVO CARDS */
+  .iphone-grid { display: flex; flex-direction: column; gap: .65rem; max-height: 360px; overflow-y: auto; padding-right: 2px; }
+  .iphone-grid::-webkit-scrollbar { width: 3px; }
+  .iphone-grid::-webkit-scrollbar-thumb { background: rgba(0,0,0,.1); border-radius: 2px; }
+  .iphone-opt {
+    background: rgba(255,255,255,.65); border: 1.5px solid rgba(0,0,0,.08);
+    border-radius: 14px; padding: 1rem; cursor: pointer; transition: all .2s;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .iphone-opt:hover { border-color: rgba(94,92,230,.3); background: rgba(255,255,255,.9); }
+  .iphone-opt.active { border-color: #5e5ce6; background: rgba(94,92,230,.07); }
+  .iphone-opt-name { font-size: 13px; font-weight: 600; color: #1d1d1f; line-height: 1.3; }
+  .iphone-opt-specs { font-size: 11px; color: #aeaeb2; margin-top: 2px; }
+  .iphone-opt-price { font-size: 15px; font-weight: 700; color: #1d1d1f; white-space: nowrap; }
+  .iphone-opt .check { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid rgba(0,0,0,.15); display: flex; align-items: center; justify-content: center; margin-left: 10px; flex-shrink: 0; transition: all .2s; }
+  .iphone-opt.active .check { background: #5e5ce6; border-color: #5e5ce6; color: #fff; font-size: 11px; font-weight: 700; }
+
+  .no-results { text-align: center; color: #aeaeb2; font-size: 13px; padding: 2rem 0; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%) translateY(16px); background: rgba(255,255,255,.92); border: 0.5px solid rgba(0,0,0,.1); color: #1d1d1f; padding: 9px 18px; border-radius: 980px; font-size: 13px; font-weight: 500; backdrop-filter: blur(20px); opacity: 0; transition: all .3s; z-index: 999; white-space: nowrap; pointer-events: none; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .footer-simple { text-align: center; font-size: 11px; color: #aeaeb2; padding: 1.5rem 2rem 3rem; }
+
+  @media(max-width:500px) {
+    .main { padding: 0 1rem 5rem; }
+    .estado-opts { gap: .35rem; }
+    .estado-opt { font-size: 12px; padding: 9px 6px; }
+    .field-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1d1d1f" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    Macbooks Cordoba &amp; Altatech
+  </div>
+  <a href="catalogo-macbooks.html" class="back-btn">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+    Volver al catálogo
+  </a>
+</header>
+
+<section class="hero">
+  <div class="hero-eyebrow">Plan Canje</div>
+  <h1>Tu iPhone vale<br><span>más de lo que creés</span></h1>
+  <p>Cotizá tu equipo actual y descubrí cuánto tenés que abonar por tu próximo iPhone.</p>
+</section>
+
+<div class="main">
+
+  <!-- STEPS -->
+  <div class="steps-bar">
+    <div class="step-item">
+      <div class="step-circle active" id="sc1">1</div>
+      <div class="step-label active" id="sl1">Tu iPhone</div>
+    </div>
+    <div class="step-connector" id="conn1"></div>
+    <div class="step-item">
+      <div class="step-circle" id="sc2">2</div>
+      <div class="step-label" id="sl2">iPhone nuevo</div>
+    </div>
+    <div class="step-connector" id="conn2"></div>
+    <div class="step-item">
+      <div class="step-circle" id="sc3">3</div>
+      <div class="step-label" id="sl3">Resultado</div>
+    </div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div id="step1" class="card">
+    <div class="card-title">¿Qué iPhone tenés?</div>
+    <div class="card-sub">Seleccioná el modelo para ver su valor de canje</div>
+
+    <div id="step1-loading"><div class="spinner"></div><div class="load-msg">Cargando modelos...</div></div>
+    <div id="step1-form" style="display:none">
+      <div class="field-row">
+        <div class="field">
+          <label>Modelo</label>
+          <select id="sel-modelo" onchange="onModeloChange()">
+            <option value="">Elegí un modelo</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Capacidad</label>
+          <select id="sel-capacidad" onchange="onCapacidadChange()" disabled>
+            <option value="">Primero el modelo</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Estado del equipo</label>
+        <div class="estado-opts">
+          <div class="estado-opt" onclick="selectEstado('Impecable')" id="est-imp">Impecable</div>
+          <div class="estado-opt" onclick="selectEstado('Bueno')" id="est-bue">Bueno</div>
+          <div class="estado-opt" onclick="selectEstado('Con detalles')" id="est-det">Con detalles</div>
+        </div>
+        <div class="estado-hint" id="estado-hint"></div>
+      </div>
+
+      <button class="btn-primary" id="btn-step1" onclick="goStep2()" disabled>
+        Ver iPhones disponibles
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </div>
+    <div id="step1-error" style="display:none" class="no-results"></div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div id="step2" class="card" style="display:none; margin-top:1rem;">
+    <div class="card-title">¿Cuál iPhone querés?</div>
+    <div class="card-sub" id="step2-sub">Elegí el modelo al que querés pasarte</div>
+
+    <div class="field" style="margin-bottom:1rem">
+      <input type="text" id="search-nuevo" placeholder="Buscar modelo..." oninput="filterIphones()">
+    </div>
+
+    <div id="iphone-list" class="iphone-grid"></div>
+
+    <button class="btn-primary" id="btn-step2" onclick="goStep3()" disabled style="margin-top:1rem">
+      Ver mi resultado
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+    <button class="btn-ghost" onclick="backStep1()">← Cambiar mi iPhone</button>
+  </div>
+
+  <!-- STEP 3 -->
+  <div id="step3" class="card" style="display:none; margin-top:1rem;">
+    <div class="card-title">Tu cotización de canje</div>
+    <div class="card-sub">Resumen de tu plan de canje</div>
+
+    <div class="result-box">
+      <div class="result-row">
+        <span class="result-row-label" id="res-usado-label">Tu iPhone vale</span>
+        <span class="result-row-val val-green" id="res-usado-val"></span>
+      </div>
+      <div class="result-row">
+        <span class="result-row-label" id="res-nuevo-label">iPhone nuevo</span>
+        <span class="result-row-val val-red" id="res-nuevo-val"></span>
+      </div>
+      <hr class="result-divider">
+      <div class="result-total-label">Diferencia a abonar</div>
+      <div class="result-total" id="res-total"></div>
+      <div class="result-note" id="res-note"></div>
+    </div>
+
+    <button class="btn-wa" onclick="sendWhatsApp()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+      Consultar este canje por WhatsApp
+    </button>
+    <button class="btn-ghost" onclick="backStep2()">← Cambiar iPhone nuevo</button>
+    <button class="btn-ghost" onclick="restart()" style="margin-top:.35rem">Hacer otra cotización</button>
+  </div>
+
+</div>
+
+<footer class="footer-simple">
+  Desarrollado por <a href="https://www.pragmastudio.com.ar" target="_blank" style="color:#5e5ce6;text-decoration:none">Pragma Studio</a>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var API_URL = 'https://script.google.com/macros/s/AKfycbzhNBlRd1XLJBY8KQesfjpuwtTrqUMrwMcDyCfN1UMEgaO6MfjqYFTXcI12CTss43jQwg/exec';
+var WA_NUMBER = '5493512017209';
+var GANANCIA = 150;
+
+var usadosData = [];   // iPhone Usados sheet
+var nuevosData = [];   // iPhones sheet
+var selectedEstado = '';
+var selectedNuevo = null;
+
+// ── LOAD ──────────────────────────────────────────────────────
+async function loadData() {
+  try {
+    var res = await fetch(API_URL);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    var rows = await res.json();
+    if (!Array.isArray(rows)) throw new Error('Formato invalido');
+
+    usadosData = rows.filter(function(r) {
+      return norm(r['_sheet']||'').indexOf('usad') >= 0 || norm(r['_sheet']||'').indexOf('iphone usad') >= 0;
+    }).filter(function(r) {
+      var p = val(r, ['producto','nombre']);
+      return p && p.length > 1;
+    }).map(function(r) {
+      return {
+        producto:  val(r, ['producto','nombre']),
+        capacidad: val(r, ['capacidad','storage']),
+        bateria:   val(r, ['color/bateria','color','bateria','battery']),
+        precio:    parsePrice(val(r, ['precio venta','precio','price'])),
+        estado:    val(r, ['estado','status']) || 'Disponible',
+      };
+    }).filter(function(r){ return r.precio > 0; });
+
+    nuevosData = rows.filter(function(r) {
+      var sheet = norm(r['_sheet']||'');
+      return sheet === 'iphones' || sheet === 'iphone';
+    }).filter(function(r) {
+      var p = val(r, ['producto','nombre']);
+      return p && p.length > 1;
+    }).map(function(r) {
+      return {
+        producto:  val(r, ['producto','nombre']),
+        capacidad: val(r, ['capacidad','storage']),
+        color:     val(r, ['color','colour']),
+        precio:    parsePrice(val(r, ['precio venta','precio','price'])),
+        estado:    val(r, ['estado','status']) || 'Disponible',
+      };
+    }).filter(function(r){ return r.precio > 0 && isAvailable(r.estado); });
+
+    if (!usadosData.length && !nuevosData.length) throw new Error('No se encontraron datos de iPhones');
+
+    buildStep1();
+  } catch(e) {
+    document.getElementById('step1-loading').style.display = 'none';
+    document.getElementById('step1-error').style.display = 'block';
+    document.getElementById('step1-error').textContent = 'Error al cargar: ' + e.message;
+    console.error(e);
+  }
+}
+
+// ── HELPERS ───────────────────────────────────────────────────
+function norm(s) {
+  return String(s||'').toLowerCase()
+    .replace(/[áàä]/g,'a').replace(/[éèë]/g,'e')
+    .replace(/[íìï]/g,'i').replace(/[óòö]/g,'o')
+    .replace(/[úùü]/g,'u').replace(/ñ/g,'n').trim();
+}
+function val(obj, keys) {
+  var okeys = Object.keys(obj);
+  for (var i=0;i<keys.length;i++) {
+    for (var j=0;j<okeys.length;j++) {
+      if (norm(okeys[j]).indexOf(norm(keys[i]))>=0) {
+        var v = String(obj[okeys[j]]||'').trim();
+        if (v) return v;
+      }
+    }
+  }
+  return '';
+}
+function parsePrice(str) {
+  if (!str) return 0;
+  var clean = str.replace(/[^0-9.,]/g,'');
+  if (!clean) return 0;
+  var parts = clean.split('.');
+  if (parts.length >= 2 && parts[parts.length-1].length === 3) clean = parts.join('');
+  else if (parts.length > 2) clean = parts.join('');
+  clean = clean.replace(/,/g,'');
+  return parseFloat(clean) || 0;
+}
+function formatUSD(n) { return 'USD ' + Math.round(n).toLocaleString('es-AR'); }
+function isAvailable(estado) {
+  var s = norm(estado);
+  return s.indexOf('agot')===-1 && s.indexOf('no disp')===-1 && s.indexOf('vendido')===-1;
+}
+
+// ── STEP 1 ────────────────────────────────────────────────────
+function buildStep1() {
+  var modelos = [];
+  usadosData.forEach(function(r) {
+    if (r.producto && modelos.indexOf(r.producto) === -1) modelos.push(r.producto);
+  });
+  modelos.sort(function(a,b){ return a.localeCompare(b); });
+
+  var sel = document.getElementById('sel-modelo');
+  sel.innerHTML = '<option value="">Elegí un modelo</option>';
+  modelos.forEach(function(m) {
+    var opt = document.createElement('option');
+    opt.value = m; opt.textContent = m;
+    sel.appendChild(opt);
+  });
+
+  document.getElementById('step1-loading').style.display = 'none';
+  document.getElementById('step1-form').style.display = 'block';
+}
+
+function onModeloChange() {
+  var modelo = document.getElementById('sel-modelo').value;
+  var capSel = document.getElementById('sel-capacidad');
+  selectedEstado = '';
+  updateEstadoBtns();
+  checkStep1Btn();
+
+  if (!modelo) { capSel.innerHTML = '<option>Primero el modelo</option>'; capSel.disabled = true; return; }
+
+  var caps = [];
+  usadosData.forEach(function(r) {
+    if (r.producto === modelo && r.capacidad && caps.indexOf(r.capacidad) === -1) caps.push(r.capacidad);
+  });
+  caps.sort(function(a,b){ var na=parseInt(a),nb=parseInt(b); return (!isNaN(na)&&!isNaN(nb))?na-nb:a.localeCompare(b); });
+
+  capSel.innerHTML = caps.length ? '<option value="">Elegí capacidad</option>' : '<option value="">Sin variantes</option>';
+  caps.forEach(function(c) {
+    var opt = document.createElement('option');
+    opt.value = c; opt.textContent = c;
+    capSel.appendChild(opt);
+  });
+  capSel.disabled = false;
+}
+
+function onCapacidadChange() { checkStep1Btn(); }
+
+function selectEstado(est) {
+  selectedEstado = est;
+  updateEstadoBtns();
+  var hints = {
+    'Impecable': 'Sin ralladuras, bateria > 85%, completo con caja.',
+    'Bueno': 'Uso normal, pequeños detalles esteticos, bateria > 75%.',
+    'Con detalles': 'Rayones visibles, bateria < 75% o sin accesorios.'
+  };
+  document.getElementById('estado-hint').textContent = hints[est] || '';
+  checkStep1Btn();
+}
+
+function updateEstadoBtns() {
+  ['Impecable','Bueno','Con detalles'].forEach(function(e) {
+    var id = e === 'Impecable' ? 'est-imp' : (e === 'Bueno' ? 'est-bue' : 'est-det');
+    var el = document.getElementById(id);
+    if (el) el.classList.toggle('active', selectedEstado === e);
+  });
+}
+
+function checkStep1Btn() {
+  var modelo = document.getElementById('sel-modelo').value;
+  var cap    = document.getElementById('sel-capacidad').value;
+  var ok = modelo && cap && selectedEstado;
+  document.getElementById('btn-step1').disabled = !ok;
+}
+
+// ── GO STEP 2 ─────────────────────────────────────────────────
+function goStep2() {
+  var modelo = document.getElementById('sel-modelo').value;
+  var cap    = document.getElementById('sel-capacidad').value;
+
+  // Find matching used iPhone price
+  var match = usadosData.find(function(r) {
+    return r.producto === modelo && r.capacidad === cap;
+  });
+
+  if (!match) { showToast('No se encontro precio para ese modelo'); return; }
+
+  // Store in state
+  window._usadoSeleccionado = {
+    producto: modelo, capacidad: cap,
+    estado: selectedEstado, precio: match.precio,
+    precioCliente: match.precio - GANANCIA
+  };
+
+  // Update steps UI
+  setStepDone(1); setStepActive(2);
+  document.getElementById('step1').style.display = 'none';
+  document.getElementById('step2').style.display = 'block';
+
+  var us = window._usadoSeleccionado;
+  document.getElementById('step2-sub').textContent =
+    'Tu ' + us.producto + ' ' + us.capacidad + ' (' + us.estado + ') vale ' + formatUSD(us.precioCliente);
+
+  renderIphoneList(nuevosData);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── STEP 2 ────────────────────────────────────────────────────
+function renderIphoneList(list) {
+  selectedNuevo = null;
+  document.getElementById('btn-step2').disabled = true;
+  var wrap = document.getElementById('iphone-list');
+
+  if (!list.length) {
+    wrap.innerHTML = '<div class="no-results">No hay iPhones disponibles con ese criterio.</div>';
+    return;
+  }
+
+  wrap.innerHTML = list.map(function(p, i) {
+    var specs = [p.capacidad, p.color].filter(Boolean).join(' · ');
+    return '<div class="iphone-opt" onclick="selectNuevo('+i+',this)" data-idx="'+i+'">' +
+      '<div>' +
+        '<div class="iphone-opt-name">' + esc(p.producto) + '</div>' +
+        (specs ? '<div class="iphone-opt-specs">' + esc(specs) + '</div>' : '') +
+      '</div>' +
+      '<div style="display:flex;align-items:center;gap:8px">' +
+        '<span class="iphone-opt-price">' + formatUSD(p.precio) + '</span>' +
+        '<div class="check"></div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+
+  // Store list reference with index
+  wrap._list = list;
+}
+
+function filterIphones() {
+  var q = norm(document.getElementById('search-nuevo').value);
+  var filtered = nuevosData.filter(function(p) {
+    return !q || norm([p.producto,p.capacidad,p.color].join(' ')).indexOf(q) >= 0;
+  });
+  renderIphoneList(filtered);
+}
+
+function selectNuevo(idx, btn) {
+  var wrap = document.getElementById('iphone-list');
+  var list = wrap._list || nuevosData;
+  selectedNuevo = list[idx];
+  document.querySelectorAll('.iphone-opt').forEach(function(el){ el.classList.remove('active'); el.querySelector('.check').textContent=''; });
+  btn.classList.add('active');
+  btn.querySelector('.check').textContent = '✓';
+  document.getElementById('btn-step2').disabled = false;
+}
+
+// ── GO STEP 3 ─────────────────────────────────────────────────
+function goStep3() {
+  if (!selectedNuevo) return;
+  var us = window._usadoSeleccionado;
+  var nu = selectedNuevo;
+  var diferencia = nu.precio - us.precioCliente;
+
+  setStepDone(2); setStepActive(3);
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('step3').style.display = 'block';
+
+  var nuSpecs = [nu.capacidad, nu.color].filter(Boolean).join(' · ');
+  document.getElementById('res-usado-label').textContent = us.producto + ' ' + us.capacidad + ' (' + us.estado + ')';
+  document.getElementById('res-usado-val').textContent = '+ ' + formatUSD(us.precioCliente);
+  document.getElementById('res-nuevo-label').textContent = nu.producto + (nuSpecs ? ' ' + nuSpecs : '');
+  document.getElementById('res-nuevo-val').textContent = '− ' + formatUSD(nu.precio);
+
+  if (diferencia <= 0) {
+    document.getElementById('res-total').textContent = '¡A tu favor!';
+    document.getElementById('res-total').style.color = '#34c759';
+    document.getElementById('res-note').textContent = 'Tu equipo cubre el valor del nuevo. Consultanos por los detalles.';
+  } else {
+    document.getElementById('res-total').textContent = formatUSD(diferencia);
+    document.getElementById('res-total').style.color = '#5e5ce6';
+    document.getElementById('res-note').textContent = 'Precio orientativo. Sujeto a revisión del equipo en persona.';
+  }
+
+  // Store for WhatsApp
+  window._canjeResult = { us: us, nu: nu, diferencia: diferencia };
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── WHATSAPP ──────────────────────────────────────────────────
+function sendWhatsApp() {
+  var r = window._canjeResult;
+  if (!r) return;
+  var nuSpecs = [r.nu.capacidad, r.nu.color].filter(Boolean).join(' - ');
+  var msg = 'Hola! Quiero consultar un Plan Canje\n\n';
+  msg += 'MI EQUIPO ACTUAL:\n';
+  msg += r.us.producto + ' ' + r.us.capacidad + ' - Estado: ' + r.us.estado + '\n';
+  msg += 'Valor de canje: ' + formatUSD(r.us.precioCliente) + '\n\n';
+  msg += 'QUIERO PASARME A:\n';
+  msg += r.nu.producto + (nuSpecs ? ' ' + nuSpecs : '') + '\n';
+  msg += 'Precio: ' + formatUSD(r.nu.precio) + '\n\n';
+  if (r.diferencia > 0) {
+    msg += 'DIFERENCIA A ABONAR: ' + formatUSD(r.diferencia) + '\n\n';
+  } else {
+    msg += 'Mi equipo cubre el valor del nuevo.\n\n';
+  }
+  msg += 'Quedamos en contacto!';
+  window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
+}
+
+// ── NAV ───────────────────────────────────────────────────────
+function backStep1() {
+  setStepActive(1); setStepPending(2); setStepPending(3);
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('step1').style.display = 'block';
+}
+function backStep2() {
+  setStepActive(2); setStepPending(3);
+  document.getElementById('step3').style.display = 'none';
+  document.getElementById('step2').style.display = 'block';
+}
+function restart() {
+  setStepActive(1); setStepPending(2); setStepPending(3);
+  selectedEstado = ''; selectedNuevo = null;
+  updateEstadoBtns();
+  document.getElementById('sel-modelo').value = '';
+  document.getElementById('sel-capacidad').value = '';
+  document.getElementById('sel-capacidad').disabled = true;
+  document.getElementById('estado-hint').textContent = '';
+  document.getElementById('btn-step1').disabled = true;
+  document.getElementById('search-nuevo').value = '';
+  document.getElementById('step3').style.display = 'none';
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('step1').style.display = 'block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── STEP INDICATOR ────────────────────────────────────────────
+function setStepDone(n) {
+  document.getElementById('sc'+n).className = 'step-circle done';
+  document.getElementById('sc'+n).textContent = '✓';
+  document.getElementById('sl'+n).className = 'step-label done';
+  if (n < 3) document.getElementById('conn'+n).className = 'step-connector done';
+}
+function setStepActive(n) {
+  document.getElementById('sc'+n).className = 'step-circle active';
+  document.getElementById('sc'+n).textContent = n;
+  document.getElementById('sl'+n).className = 'step-label active';
+}
+function setStepPending(n) {
+  document.getElementById('sc'+n).className = 'step-circle';
+  document.getElementById('sc'+n).textContent = n;
+  document.getElementById('sl'+n).className = 'step-label';
+  if (n > 1) document.getElementById('conn'+(n-1)).className = 'step-connector';
+}
+
+// ── UTILS ─────────────────────────────────────────────────────
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
+}
+
+loadData();
+</script>
+</body>
+</html>
