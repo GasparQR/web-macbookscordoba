@@ -326,7 +326,7 @@
 <script>
 var API_URL = 'https://script.google.com/macros/s/AKfycbzhNBlRd1XLJBY8KQesfjpuwtTrqUMrwMcDyCfN1UMEgaO6MfjqYFTXcI12CTss43jQwg/exec';
 var WA_NUMBER = '5493512017209';
-var GANANCIA = 150;
+var GANANCIA = 80;
 
 var usadosData = [];   // iPhone Usados sheet
 var nuevosData = [];   // iPhones sheet
@@ -503,11 +503,16 @@ function goStep2() {
 
   if (!match) { showToast('No se encontro precio para ese modelo'); return; }
 
+  // Descuento por estado
+  var estadoMult = { 'Impecable': 1.0, 'Bueno': 0.90, 'Con detalles': 0.80 };
+  var mult = estadoMult[selectedEstado] || 1.0;
+  var precioCliente = Math.round(match.precio * mult) - GANANCIA;
+
   // Store in state
   window._usadoSeleccionado = {
     producto: modelo, capacidad: cap,
     estado: selectedEstado, precio: match.precio,
-    precioCliente: match.precio - GANANCIA
+    mult: mult, precioCliente: precioCliente
   };
 
   // Update steps UI
@@ -516,8 +521,10 @@ function goStep2() {
   document.getElementById('step2').style.display = 'block';
 
   var us = window._usadoSeleccionado;
-  document.getElementById('step2-sub').textContent =
-    'Tu ' + us.producto + ' ' + us.capacidad + ' (' + us.estado + ') vale ' + formatUSD(us.precioCliente);
+  var descPct = Math.round((1 - us.mult) * 100);
+  var subText = 'Tu ' + us.producto + ' ' + us.capacidad + ' (' + us.estado + ') vale ' + formatUSD(us.precioCliente);
+  if (descPct > 0) subText += ' (precio base ' + formatUSD(us.precio) + ' − ' + descPct + '% por estado − margen)';
+  document.getElementById('step2-sub').textContent = subText;
 
   renderIphoneList(nuevosData);
   window.scrollTo({top:0,behavior:'smooth'});
@@ -587,6 +594,11 @@ function goStep3() {
   document.getElementById('res-nuevo-label').textContent = nu.producto + (nuSpecs ? ' ' + nuSpecs : '');
   document.getElementById('res-nuevo-val').textContent = '− ' + formatUSD(nu.precio);
 
+  var descPct2 = Math.round((1 - r.us.mult) * 100);
+  var breakdown = 'Base ' + formatUSD(r.us.precio);
+  if (descPct2 > 0) breakdown += ' − ' + descPct2 + '% por estado (' + r.us.estado + ')';
+  breakdown += ' − USD ' + GANANCIA + ' margen = ' + formatUSD(r.us.precioCliente);
+
   if (diferencia <= 0) {
     document.getElementById('res-total').textContent = '¡A tu favor!';
     document.getElementById('res-total').style.color = '#34c759';
@@ -594,7 +606,7 @@ function goStep3() {
   } else {
     document.getElementById('res-total').textContent = formatUSD(diferencia);
     document.getElementById('res-total').style.color = '#5e5ce6';
-    document.getElementById('res-note').textContent = 'Precio orientativo. Sujeto a revisión del equipo en persona.';
+    document.getElementById('res-note').textContent = breakdown + '. Precio orientativo, sujeto a revision del equipo.';
   }
 
   // Store for WhatsApp
@@ -608,9 +620,13 @@ function sendWhatsApp() {
   if (!r) return;
   var nuSpecs = [r.nu.capacidad, r.nu.color].filter(Boolean).join(' - ');
   var msg = 'Hola! Quiero consultar un Plan Canje\n\n';
+  var descPct3 = Math.round((1 - r.us.mult) * 100);
   msg += 'MI EQUIPO ACTUAL:\n';
   msg += r.us.producto + ' ' + r.us.capacidad + ' - Estado: ' + r.us.estado + '\n';
-  msg += 'Valor de canje: ' + formatUSD(r.us.precioCliente) + '\n\n';
+  msg += 'Precio base: ' + formatUSD(r.us.precio);
+  if (descPct3 > 0) msg += ' (−' + descPct3 + '% por estado)';
+  msg += '\n';
+  msg += 'Valor de canje ofrecido: ' + formatUSD(r.us.precioCliente) + '\n\n';
   msg += 'QUIERO PASARME A:\n';
   msg += r.nu.producto + (nuSpecs ? ' ' + nuSpecs : '') + '\n';
   msg += 'Precio: ' + formatUSD(r.nu.precio) + '\n\n';
