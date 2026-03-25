@@ -174,6 +174,19 @@
   .iphone-opt .check { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid rgba(0,0,0,.15); display: flex; align-items: center; justify-content: center; margin-left: 10px; flex-shrink: 0; transition: all .2s; }
   .iphone-opt.active .check { background: #5e5ce6; border-color: #5e5ce6; color: #fff; font-size: 11px; font-weight: 700; }
 
+  .tipo-tabs { display: flex; gap: .5rem; margin-bottom: 1rem; }
+  .tipo-tab {
+    flex: 1; background: rgba(255,255,255,.55); border: 1.5px solid rgba(0,0,0,.1);
+    border-radius: 12px; padding: 10px; font-family: inherit; font-size: 13px; font-weight: 600;
+    color: #6e6e73; cursor: pointer; transition: all .2s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+  .tipo-tab:hover { background: rgba(255,255,255,.9); color: #1d1d1f; }
+  .tipo-tab.active { background: #5e5ce6; border-color: #5e5ce6; color: #fff; }
+
+  .iphone-grupo { margin-bottom: .5rem; }
+  .iphone-grupo-titulo { font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; color: #aeaeb2; padding: .5rem 0 .4rem; border-bottom: 0.5px solid rgba(0,0,0,.06); margin-bottom: .4rem; }
+
   .no-results { text-align: center; color: #aeaeb2; font-size: 13px; padding: 2rem 0; }
 
   /* TOAST */
@@ -274,8 +287,19 @@
     <div class="card-title">¿Cuál iPhone querés?</div>
     <div class="card-sub" id="step2-sub">Elegí el modelo al que querés pasarte</div>
 
-    <div class="field" style="margin-bottom:1rem">
-      <input type="text" id="search-nuevo" placeholder="Buscar modelo..." oninput="filterIphones()">
+    <div class="tipo-tabs">
+      <button class="tipo-tab active" id="tab-nuevo" onclick="setTipo('nuevo')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+        iPhone Nuevo
+      </button>
+      <button class="tipo-tab" id="tab-usado" onclick="setTipo('usado')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+        iPhone Usado
+      </button>
+    </div>
+
+    <div class="field" style="margin-bottom:.75rem">
+      <input type="text" id="search-nuevo" placeholder="Buscar modelo o capacidad..." oninput="filterIphones()">
     </div>
 
     <div id="iphone-list" class="iphone-grid"></div>
@@ -329,7 +353,8 @@ var WA_NUMBER = '5493512017209';
 var GANANCIA = 80;
 
 var usadosData = [];   // iPhone Usados sheet
-var nuevosData = [];   // iPhones sheet
+var nuevosData = [];   // iPhones sheet (nuevos)
+var tipoActual = 'nuevo';
 var selectedEstado = '';
 var selectedNuevo = null;
 
@@ -366,9 +391,27 @@ async function loadData() {
       return {
         producto:  val(r, ['producto','nombre']),
         capacidad: val(r, ['capacidad','storage']),
-        color:     val(r, ['color','colour']),
         precio:    parsePrice(val(r, ['precio venta','precio','price'])),
         estado:    val(r, ['estado','status']) || 'Disponible',
+        tipo:      'nuevo',
+      };
+    }).filter(function(r){ return r.precio > 0 && isAvailable(r.estado); });
+
+    // iPhone usados disponibles para comprar (distinto de usadosData que es para canjear)
+    window.usadosParaComprar = rows.filter(function(r) {
+      var sheet = norm(r['_sheet']||'');
+      return sheet.indexOf('usad') >= 0;
+    }).filter(function(r) {
+      var p = val(r, ['producto','nombre']);
+      return p && p.length > 1;
+    }).map(function(r) {
+      return {
+        producto:  val(r, ['producto','nombre']),
+        capacidad: val(r, ['capacidad','storage']),
+        bateria:   val(r, ['color/bateria','color','bateria']),
+        precio:    parsePrice(val(r, ['precio venta','precio','price'])),
+        estado:    val(r, ['estado','status']) || 'Disponible',
+        tipo:      'usado',
       };
     }).filter(function(r){ return r.precio > 0 && isAvailable(r.estado); });
 
@@ -526,43 +569,139 @@ function goStep2() {
   if (descPct > 0) subText += ' (precio base ' + formatUSD(us.precio) + ' − ' + descPct + '% por estado − margen)';
   document.getElementById('step2-sub').textContent = subText;
 
-  renderIphoneList(nuevosData);
+  tipoActual = 'nuevo';
+  document.getElementById('tab-nuevo').classList.add('active');
+  document.getElementById('tab-usado').classList.remove('active');
+  filterIphones();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
 // ── STEP 2 ────────────────────────────────────────────────────
+function setTipo(tipo) {
+  tipoActual = tipo;
+  document.getElementById('tab-nuevo').classList.toggle('active', tipo === 'nuevo');
+  document.getElementById('tab-usado').classList.toggle('active', tipo === 'usado');
+  selectedNuevo = null;
+  document.getElementById('btn-step2').disabled = true;
+  document.getElementById('search-nuevo').value = '';
+  filterIphones();
+}
+
+function getListaActual() {
+  return tipoActual === 'nuevo' ? nuevosData : (window.usadosParaComprar || []);
+}
+
+function groupByModelo(list) {
+  // Group by producto, then by capacidad → collect prices
+  var grupos = {};
+  list.forEach(function(p) {
+    var key = p.producto;
+    if (!grupos[key]) grupos[key] = {};
+    var capKey = p.capacidad || 'Sin especificar';
+    if (!grupos[key][capKey]) grupos[key][capKey] = { precios: [], items: [] };
+    grupos[key][capKey].precios.push(p.precio);
+    grupos[key][capKey].items.push(p);
+  });
+  // Sort modelo names
+  var sortedModelos = Object.keys(grupos).sort(function(a,b){ return a.localeCompare(b); });
+  var result = [];
+  sortedModelos.forEach(function(modelo) {
+    var caps = grupos[modelo];
+    // Sort capacidades numerically
+    var sortedCaps = Object.keys(caps).sort(function(a,b){
+      var na=parseInt(a), nb=parseInt(b);
+      return (!isNaN(na)&&!isNaN(nb)) ? na-nb : a.localeCompare(b);
+    });
+    sortedCaps.forEach(function(cap) {
+      var entry = caps[cap];
+      var min = Math.min.apply(null, entry.precios);
+      var max = Math.max.apply(null, entry.precios);
+      result.push({
+        modelo: modelo, capacidad: cap,
+        min: min, max: max,
+        count: entry.items.length,
+        items: entry.items,
+        tipo: tipoActual,
+      });
+    });
+  });
+  return result;
+}
+
 function renderIphoneList(list) {
   selectedNuevo = null;
   document.getElementById('btn-step2').disabled = true;
   var wrap = document.getElementById('iphone-list');
 
   if (!list.length) {
-    wrap.innerHTML = '<div class="no-results">No hay iPhones disponibles con ese criterio.</div>';
+    wrap.innerHTML = '<div class="no-results">No hay iPhones disponibles.</div>';
+    wrap._grouped = [];
     return;
   }
 
-  wrap.innerHTML = list.map(function(p, i) {
-    var specs = [p.capacidad, p.color].filter(Boolean).join(' · ');
-    return '<div class="iphone-opt" onclick="selectNuevo('+i+',this)" data-idx="'+i+'">' +
-      '<div>' +
-        '<div class="iphone-opt-name">' + esc(p.producto) + '</div>' +
-        (specs ? '<div class="iphone-opt-specs">' + esc(specs) + '</div>' : '') +
-      '</div>' +
-      '<div style="display:flex;align-items:center;gap:8px">' +
-        '<span class="iphone-opt-price">' + formatUSD(p.precio) + '</span>' +
-        '<div class="check"></div>' +
-      '</div>' +
-    '</div>';
-  }).join('');
+  var grouped = groupByModelo(list);
+  wrap._grouped = grouped;
 
-  // Store list reference with index
-  wrap._list = list;
+  // Group by modelo for section headers
+  var byModelo = {};
+  grouped.forEach(function(g, i) {
+    if (!byModelo[g.modelo]) byModelo[g.modelo] = [];
+    byModelo[g.modelo].push({ g: g, i: i });
+  });
+
+  var html = '';
+  Object.keys(byModelo).forEach(function(modelo) {
+    html += '<div class="iphone-grupo">';
+    html += '<div class="iphone-grupo-titulo">' + esc(modelo) + '</div>';
+    byModelo[modelo].forEach(function(entry) {
+      var g = entry.g; var i = entry.i;
+      var priceStr = g.min === g.max ? formatUSD(g.min) : formatUSD(g.min) + ' — ' + formatUSD(g.max);
+      var badge = g.tipo === 'usado'
+        ? '<span style="font-size:10px;background:rgba(255,159,10,.12);color:#b36200;border-radius:980px;padding:2px 8px;font-weight:600;margin-left:6px">Usado</span>'
+        : '<span style="font-size:10px;background:rgba(94,92,230,.1);color:#5e5ce6;border-radius:980px;padding:2px 8px;font-weight:600;margin-left:6px">Nuevo</span>';
+      html += '<div class="iphone-opt" onclick="selectGrupo('+i+',this)" data-idx="'+i+'">' +
+        '<div>' +
+          '<div class="iphone-opt-name" style="display:flex;align-items:center">' + esc(g.capacidad) + badge + '</div>' +
+          (g.count > 1 ? '<div class="iphone-opt-specs">' + g.count + ' opciones disponibles</div>' : '') +
+        '</div>' +
+        '<div style="display:flex;align-items:center;gap:8px">' +
+          '<span class="iphone-opt-price">' + priceStr + '</span>' +
+          '<div class="check"></div>' +
+        '</div>' +
+      '</div>';
+    });
+    html += '</div>';
+  });
+
+  wrap.innerHTML = html;
+}
+
+function selectGrupo(idx, btn) {
+  var wrap = document.getElementById('iphone-list');
+  var grouped = wrap._grouped || [];
+  var g = grouped[idx];
+  if (!g) return;
+  // Pick the cheapest item from this group as representative
+  var cheapest = g.items.reduce(function(a,b){ return a.precio <= b.precio ? a : b; });
+  selectedNuevo = {
+    producto: g.modelo,
+    capacidad: g.capacidad,
+    precio: g.min,
+    precioMax: g.max,
+    tipo: g.tipo,
+    _original: cheapest,
+  };
+  document.querySelectorAll('.iphone-opt').forEach(function(el){ el.classList.remove('active'); el.querySelector('.check').textContent=''; });
+  btn.classList.add('active');
+  btn.querySelector('.check').textContent = '✓';
+  document.getElementById('btn-step2').disabled = false;
 }
 
 function filterIphones() {
   var q = norm(document.getElementById('search-nuevo').value);
-  var filtered = nuevosData.filter(function(p) {
-    return !q || norm([p.producto,p.capacidad,p.color].join(' ')).indexOf(q) >= 0;
+  var base = getListaActual();
+  var filtered = base.filter(function(p) {
+    return !q || norm([p.producto,p.capacidad].join(' ')).indexOf(q) >= 0;
   });
   renderIphoneList(filtered);
 }
@@ -582,17 +721,23 @@ function goStep3() {
   if (!selectedNuevo) return;
   var us = window._usadoSeleccionado;
   var nu = selectedNuevo;
+  // Use min price for the diferencia (best case for client)
   var diferencia = nu.precio - us.precioCliente;
 
   setStepDone(2); setStepActive(3);
   document.getElementById('step2').style.display = 'none';
   document.getElementById('step3').style.display = 'block';
 
-  var nuSpecs = [nu.capacidad, nu.color].filter(Boolean).join(' · ');
+  // nuSpecs removed - simplified display
   document.getElementById('res-usado-label').textContent = us.producto + ' ' + us.capacidad + ' (' + us.estado + ')';
   document.getElementById('res-usado-val').textContent = '+ ' + formatUSD(us.precioCliente);
-  document.getElementById('res-nuevo-label').textContent = nu.producto + (nuSpecs ? ' ' + nuSpecs : '');
-  document.getElementById('res-nuevo-val').textContent = '− ' + formatUSD(nu.precio);
+  var nuLabel = nu.producto + ' ' + nu.capacidad;
+  var nuTipoBadge = nu.tipo === 'usado' ? ' (Usado)' : ' (Nuevo)';
+  document.getElementById('res-nuevo-label').textContent = nuLabel + nuTipoBadge;
+  var nuPriceStr = (nu.precioMax && nu.precioMax !== nu.precio)
+    ? '− ' + formatUSD(nu.precio) + ' — ' + formatUSD(nu.precioMax)
+    : '− ' + formatUSD(nu.precio);
+  document.getElementById('res-nuevo-val').textContent = nuPriceStr;
 
   var descPct2 = Math.round((1 - r.us.mult) * 100);
   var breakdown = 'Base ' + formatUSD(r.us.precio);
@@ -606,7 +751,10 @@ function goStep3() {
   } else {
     document.getElementById('res-total').textContent = formatUSD(diferencia);
     document.getElementById('res-total').style.color = '#5e5ce6';
-    document.getElementById('res-note').textContent = breakdown + '. Precio orientativo, sujeto a revision del equipo.';
+    var rangeNote = (r.nu.precioMax && r.nu.precioMax !== r.nu.precio)
+      ? ' El precio final depende del modelo exacto ('  + formatUSD(r.nu.precio) + '—' + formatUSD(r.nu.precioMax) + ').'
+      : '';
+    document.getElementById('res-note').textContent = breakdown + '. Precio orientativo.' + rangeNote;
   }
 
   // Store for WhatsApp
@@ -628,8 +776,14 @@ function sendWhatsApp() {
   msg += '\n';
   msg += 'Valor de canje ofrecido: ' + formatUSD(r.us.precioCliente) + '\n\n';
   msg += 'QUIERO PASARME A:\n';
-  msg += r.nu.producto + (nuSpecs ? ' ' + nuSpecs : '') + '\n';
-  msg += 'Precio: ' + formatUSD(r.nu.precio) + '\n\n';
+  msg += r.nu.producto + ' ' + r.nu.capacidad;
+  msg += r.nu.tipo === 'usado' ? ' (Usado)' : ' (Nuevo)';
+  msg += '\n';
+  if (r.nu.precioMax && r.nu.precioMax !== r.nu.precio) {
+    msg += 'Precio: ' + formatUSD(r.nu.precio) + ' — ' + formatUSD(r.nu.precioMax) + '\n\n';
+  } else {
+    msg += 'Precio: ' + formatUSD(r.nu.precio) + '\n\n';
+  }
   if (r.diferencia > 0) {
     msg += 'DIFERENCIA A ABONAR: ' + formatUSD(r.diferencia) + '\n\n';
   } else {
@@ -660,6 +814,9 @@ function restart() {
   document.getElementById('estado-hint').textContent = '';
   document.getElementById('btn-step1').disabled = true;
   document.getElementById('search-nuevo').value = '';
+  tipoActual = 'nuevo';
+  document.getElementById('tab-nuevo').classList.add('active');
+  document.getElementById('tab-usado').classList.remove('active');
   document.getElementById('step3').style.display = 'none';
   document.getElementById('step2').style.display = 'none';
   document.getElementById('step1').style.display = 'block';
