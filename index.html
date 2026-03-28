@@ -68,35 +68,7 @@
   }
   .hero p { font-size: 16px; color: #6e6e73; max-width: 400px; margin: 0 auto; line-height: 1.5; }
 
-  /* SEARCH */
-  .controls { padding: 1.5rem 2rem 1rem; display: flex; flex-direction: column; align-items: center; gap: 1rem; }
-  .search-box {
-    background: rgba(255,255,255,0.7);
-    border: 0.5px solid rgba(0,0,0,0.1);
-    border-radius: 12px;
-    padding: 10px 16px 10px 38px;
-    width: 100%; max-width: 480px;
-    font-family: inherit; font-size: 15px; color: #1d1d1f;
-    outline: none;
-    backdrop-filter: blur(10px);
-    transition: border-color .2s, background .2s;
-    position: relative;
-  }
-  .search-wrap { position: relative; width: 100%; max-width: 480px; }
-  .search-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; }
-  .search-box:focus { background: rgba(255,255,255,0.95); border-color: rgba(94,92,230,.5); }
-  .search-box::placeholder { color: #aeaeb2; }
 
-  .filters { display: flex; gap: .4rem; flex-wrap: wrap; justify-content: center; }
-  .filter-btn {
-    background: rgba(255,255,255,0.55);
-    border: 0.5px solid rgba(0,0,0,0.1);
-    color: #6e6e73; padding: 5px 14px; border-radius: 980px;
-    cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 500;
-    transition: all .2s; backdrop-filter: blur(8px);
-  }
-  .filter-btn:hover { background: rgba(255,255,255,.9); color: #1d1d1f; }
-  .filter-btn.active { background: #5e5ce6; border-color: #5e5ce6; color: #fff; }
 
   .estado-filters { display: flex; gap: .4rem; flex-wrap: wrap; justify-content: center; }
   .estado-btn {
@@ -130,70 +102,148 @@
   .cap-btn:hover { background: rgba(255,255,255,.9); color: #1d1d1f; }
   .cap-btn.active { background: #1d1d1f; border-color: #1d1d1f; color: #fff; font-weight: 600; }
 
-  .controls-panel {
-    width: min(1100px, calc(100% - 2rem));
-    background: rgba(255,255,255,0.58);
-    border: 1px solid rgba(255,255,255,0.72);
-    border-radius: 24px;
-    padding: 1rem;
-    backdrop-filter: blur(18px) saturate(160%);
-    -webkit-backdrop-filter: blur(18px) saturate(160%);
-    box-shadow: 0 12px 50px rgba(31,41,55,.07);
+  /* SIDEBAR LAYOUT */
+  .catalog-layout {
+    display: flex;
+    gap: 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem 5rem;
+    align-items: flex-start;
   }
-  .stats-strip { display: flex; gap: .8rem; flex-wrap: wrap; justify-content: center; width: 100%; }
-  .stat-pill {
-    padding: .8rem 1rem; border-radius: 18px; min-width: 170px;
-    background: rgba(255,255,255,.55); border: 1px solid rgba(255,255,255,.7);
-    text-align: left;
+  .sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 68px;
+    display: flex;
+    flex-direction: column;
+    gap: .65rem;
   }
-  .stat-label { font-size: 11px; color: #8e8e93; text-transform: uppercase; letter-spacing: .08em; margin-bottom: .2rem; }
-  .stat-value { font-size: 18px; font-weight: 700; color: #1d1d1f; letter-spacing: -.03em; }
-  .filters-panel-grid { display: grid; grid-template-columns: 1fr; gap: .9rem; width: 100%; }
+  .sidebar-search {
+    background: rgba(255,255,255,.75);
+    border: 0.5px solid rgba(0,0,0,.1);
+    border-radius: 12px;
+    padding: 9px 12px 9px 34px;
+    width: 100%;
+    font-family: inherit; font-size: 13px; color: #1d1d1f;
+    outline: none;
+    backdrop-filter: blur(10px);
+    transition: border-color .2s;
+  }
+  .sidebar-search:focus { border-color: rgba(94,92,230,.5); }
+  .sidebar-search::placeholder { color: #aeaeb2; }
+  .sidebar-search-wrap { position: relative; }
+  .sidebar-search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; }
+
   .filter-group {
-    background: rgba(255,255,255,.35);
-    border: 1px solid rgba(255,255,255,.6);
-    border-radius: 18px;
-    padding: .9rem;
+    background: rgba(255,255,255,.72);
+    border: 0.5px solid rgba(255,255,255,.9);
+    border-radius: 14px;
+    padding: .75rem;
+    backdrop-filter: blur(16px);
   }
-  .group-head { display: flex; align-items: center; justify-content: space-between; gap: .8rem; margin-bottom: .7rem; }
-  .group-title { font-size: 12px; color: #6e6e73; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
-  .group-meta { font-size: 12px; color: #8e8e93; }
-  .filter-row { display: flex; flex-wrap: wrap; gap: .45rem; }
+  .group-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: .6rem; }
+  .group-title { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #aeaeb2; }
+  .group-meta { font-size: 10px; color: #c7c7cc; }
+  .filter-row { display: flex; flex-direction: column; gap: 2px; }
+
+  /* FACET ROWS — sidebar style */
   .facet-btn {
-    background: rgba(255,255,255,0.7);
-    border: 1px solid rgba(0,0,0,0.08);
-    color: #4b5563; padding: 8px 12px; border-radius: 999px;
-    cursor: pointer; font-family: inherit; font-size: 13px; font-weight: 600;
-    transition: all .2s ease; display: inline-flex; align-items: center; gap: 8px;
+    background: transparent;
+    border: none;
+    color: #4b5563;
+    padding: 6px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all .15s;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    text-align: left;
+    width: 100%;
   }
-  .facet-btn:hover { transform: translateY(-1px); background: rgba(255,255,255,.95); color: #111827; }
-  .facet-btn { position: relative; }
-  .facet-btn.active { background: #5e5ce6; border-color: #5e5ce6; color: #fff; box-shadow: 0 8px 20px rgba(94,92,230,.22); }
-  .facet-check { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 3px; border: 1.5px solid rgba(94,92,230,.35); margin-right: 5px; font-size: 9px; font-weight: 700; flex-shrink: 0; transition: all .15s; }
-  .facet-btn.active .facet-check { background: rgba(255,255,255,.25); border-color: rgba(255,255,255,.5); color: #fff; }
-  .facet-btn.dark.active .facet-check { background: rgba(255,255,255,.2); border-color: rgba(255,255,255,.4); }
-  .facet-btn.dark.active { background: #1d1d1f; border-color: #1d1d1f; }
-  .facet-btn.green.active { background: #34c759; border-color: #34c759; }
-  .facet-btn.orange.active { background: #ff9f0a; border-color: #ff9f0a; }
-  .facet-btn.violet.active { background: #5e5ce6; border-color: #5e5ce6; }
+  .facet-btn:hover { background: rgba(0,0,0,.04); color: #1d1d1f; }
+  .facet-btn.active { background: rgba(94,92,230,.08); color: #5e5ce6; font-weight: 600; }
+  .facet-btn.dark.active { background: rgba(0,0,0,.06); color: #1d1d1f; }
+  .facet-btn.green.active { background: rgba(52,199,89,.08); color: #248a3d; }
+  .facet-btn.orange.active { background: rgba(255,159,10,.08); color: #b36200; }
+  .facet-btn.violet.active { background: rgba(94,92,230,.08); color: #5e5ce6; }
+  .facet-check {
+    width: 15px; height: 15px; border-radius: 4px;
+    border: 1.5px solid #d1d5db;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700;
+    transition: all .15s;
+  }
+  .facet-btn.active .facet-check { background: #5e5ce6; border-color: #5e5ce6; color: #fff; }
+  .facet-btn.dark.active .facet-check { background: #1d1d1f; border-color: #1d1d1f; color: #fff; }
+  .facet-btn.green.active .facet-check { background: #34c759; border-color: #34c759; color: #fff; }
+  .facet-btn.orange.active .facet-check { background: #ff9f0a; border-color: #ff9f0a; color: #fff; }
   .facet-count {
-    min-width: 20px; height: 20px; padding: 0 6px;
-    border-radius: 999px; display: inline-flex; align-items: center; justify-content: center;
-    background: rgba(0,0,0,.06); font-size: 11px; font-weight: 700;
+    margin-left: auto;
+    font-size: 11px;
+    color: #c7c7cc;
+    font-weight: 600;
+    flex-shrink: 0;
   }
-  .facet-btn.active .facet-count { background: rgba(255,255,255,.18); }
-  .toolbar-row { display: flex; gap: .8rem; flex-wrap: wrap; align-items: center; justify-content: space-between; }
-  .active-filters { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .facet-btn.active .facet-count { color: rgba(94,92,230,.5); }
+  .facet-btn.dark.active .facet-count { color: rgba(0,0,0,.3); }
+
+  /* MAIN CONTENT AREA */
+  .catalog-main { flex: 1; min-width: 0; }
+
+  /* TOOLBAR */
+  .toolbar-row {
+    display: flex; gap: .65rem; flex-wrap: wrap;
+    align-items: center; justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  .active-filters { display: flex; flex-wrap: wrap; gap: .4rem; flex: 1; }
   .active-chip {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(255,255,255,.75); border: 1px solid rgba(0,0,0,.08);
-    color: #374151; border-radius: 999px; padding: 8px 12px; font-size: 12px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,.75); border: 0.5px solid rgba(0,0,0,.08);
+    color: #374151; border-radius: 980px; padding: 5px 10px; font-size: 11px; font-weight: 600;
+    backdrop-filter: blur(8px);
   }
-  .chip-x { cursor: pointer; color: #8e8e93; font-weight: 700; }
-  .toolbar-actions { display:flex; align-items:center; gap:.65rem; flex-wrap:wrap; }
+  .chip-x { cursor: pointer; color: #aeaeb2; font-weight: 700; }
+  .toolbar-actions { display: flex; align-items: center; gap: .5rem; }
   .sort-select {
-    background: rgba(255,255,255,.78); border: 1px solid rgba(0,0,0,.08);
-    border-radius: 12px; padding: 9px 12px; font-family: inherit; font-size: 13px; color: #1d1d1f;
+    background: rgba(255,255,255,.75); border: 0.5px solid rgba(0,0,0,.08);
+    border-radius: 10px; padding: 7px 10px; font-family: inherit; font-size: 12px; color: #1d1d1f;
+    backdrop-filter: blur(8px);
+  }
+
+  /* STATS */
+  .stats-strip { display: flex; gap: .6rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .stat-pill {
+    padding: .6rem .85rem; border-radius: 12px;
+    background: rgba(255,255,255,.65); border: 0.5px solid rgba(255,255,255,.9);
+    backdrop-filter: blur(10px);
+  }
+  .stat-label { font-size: 10px; color: #aeaeb2; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 1px; }
+  .stat-value { font-size: 16px; font-weight: 700; color: #1d1d1f; letter-spacing: -.03em; }
+
+  /* GRID — inside main */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: .85rem;
+  }
+
+  @media(max-width: 768px) {
+    .catalog-layout { flex-direction: column; padding: 0 1rem 4rem; gap: 1rem; }
+    .sidebar { width: 100%; position: static; }
+    .filter-row { flex-direction: row; flex-wrap: wrap; gap: .35rem; }
+    .facet-btn { width: auto; padding: 5px 12px; border-radius: 980px; border: 0.5px solid rgba(0,0,0,.08); background: rgba(255,255,255,.6); }
+    .facet-btn.active { background: #5e5ce6; color: #fff; }
+    .facet-btn.active .facet-check { display: none; }
+    .facet-check { display: none; }
+    .facet-count { display: none; }
   }
   /* Floating clear btn */
   .fab-clear {
@@ -234,13 +284,7 @@
   /* RESULTS */
   .results-info { text-align: center; font-size: 13px; color: #aeaeb2; padding: .25rem 2rem .75rem; }
 
-  /* GRID */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1rem; padding: 0 2rem 5rem;
-    max-width: 1400px; margin: 0 auto;
-  }
+
 
   .card {
     background: rgba(255,255,255,0.72);
@@ -497,84 +541,92 @@
   <p id="hero-sub">Equipos Apple nuevos sellados con garantia oficial. Entrega en Cordoba.</p>
 </section>
 
-<div class="controls">
-  <div class="controls-panel">
-    <div class="search-wrap">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#aeaeb2" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input class="search-box" type="text" id="search" placeholder="Buscar modelo, chip, color, capacidad..." oninput="handleSearchInput()">
+<div class="catalog-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-search-wrap">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#aeaeb2" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input class="sidebar-search" type="text" id="search" placeholder="Buscar..." oninput="handleSearchInput()">
     </div>
-    <br>
+
+    <div class="filter-group" id="group-category">
+      <div class="group-head">
+        <div class="group-title">Categoria</div>
+        <div class="group-meta" id="category-meta"></div>
+      </div>
+      <div class="filter-row" id="filters"></div>
+    </div>
+
+    <div class="filter-group" id="group-estado">
+      <div class="group-head">
+        <div class="group-title">Estado</div>
+      </div>
+      <div class="filter-row" id="estado-filters"></div>
+    </div>
+
+    <div class="filter-group" id="group-marca">
+      <div class="group-head">
+        <div class="group-title">Marca</div>
+        <div class="group-meta" id="marca-meta"></div>
+      </div>
+      <div class="filter-row" id="marca-filters"></div>
+    </div>
+
+    <div class="filter-group" id="group-modelo">
+      <div class="group-head">
+        <div class="group-title">Modelo</div>
+        <div class="group-meta" id="modelo-meta"></div>
+      </div>
+      <div class="filter-row" id="modelo-filters"></div>
+    </div>
+
+    <div class="filter-group" id="group-capacidad">
+      <div class="group-head">
+        <div class="group-title">Capacidad</div>
+        <div class="group-meta" id="capacidad-meta"></div>
+      </div>
+      <div class="filter-row" id="capacidad-filters"></div>
+    </div>
+
+    <div class="filter-group" id="group-color">
+      <div class="group-head">
+        <div class="group-title">Color</div>
+        <div class="group-meta" id="color-meta"></div>
+      </div>
+      <div class="filter-row" id="color-filters"></div>
+    </div>
+
+    <div class="filter-group" id="group-producto">
+      <div class="group-head">
+        <div class="group-title">Producto</div>
+        <div class="group-meta" id="producto-meta"></div>
+      </div>
+      <div class="filter-row" id="producto-filters"></div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="catalog-main">
     <div class="stats-strip" id="stats-strip"></div>
-<br>
-    <div class="filters-panel-grid">
-      <div class="filter-group" id="group-category">
-        <div class="group-head">
-          <div class="group-title">Categoría</div>
-          <div class="group-meta" id="category-meta"></div>
-        </div>
-        <div class="filter-row" id="filters"></div>
-      </div>
-
-      <div class="filter-group" id="group-estado">
-        <div class="group-head">
-          <div class="group-title">Estado</div>
-          <div class="group-meta">Solo opciones con stock real cargado</div>
-        </div>
-        <div class="filter-row" id="estado-filters"></div>
-      </div>
-
-      <div class="filter-group" id="group-capacidad">
-        <div class="group-head">
-          <div class="group-title">Capacidad</div>
-          <div class="group-meta" id="capacidad-meta"></div>
-        </div>
-        <div class="filter-row" id="capacidad-filters"></div>
-      </div>
-
-      <div class="filter-group" id="group-color">
-        <div class="group-head">
-          <div class="group-title">Color</div>
-          <div class="group-meta" id="color-meta"></div>
-        </div>
-        <div class="filter-row" id="color-filters"></div>
-      </div>
-
-      <div class="filter-group" id="group-marca">
-        <div class="group-head">
-          <div class="group-title">Marca</div>
-          <div class="group-meta" id="marca-meta"></div>
-        </div>
-        <div class="filter-row" id="marca-filters"></div>
-      </div>
-
-      <div class="filter-group" id="group-producto">
-        <div class="group-head">
-          <div class="group-title">Producto</div>
-          <div class="group-meta" id="producto-meta"></div>
-        </div>
-        <div class="filter-row" id="producto-filters"></div>
-      </div>
-
-      <div class="toolbar-row">
-        <div class="active-filters" id="active-filters"></div>
-        <div class="toolbar-actions">
-          <select class="sort-select" id="sort-select" onchange="renderProducts()">
-            <option value="featured">Ordenar: destacados</option>
-            <option value="price-asc">Precio: menor a mayor</option>
-            <option value="price-desc">Precio: mayor a menor</option>
-            <option value="name-asc">Nombre: A a Z</option>
-          </select>
-        </div>
+    <div class="toolbar-row">
+      <div class="active-filters" id="active-filters"></div>
+      <div class="toolbar-actions">
+        <select class="sort-select" id="sort-select" onchange="renderProducts()">
+          <option value="featured">Ordenar: destacados</option>
+          <option value="price-asc">Precio: menor a mayor</option>
+          <option value="price-desc">Precio: mayor a menor</option>
+          <option value="name-asc">Nombre: A a Z</option>
+        </select>
       </div>
     </div>
+    <div class="results-info" id="results-info"></div>
+    <main class="grid" id="grid">
+      <div class="state-msg"><div class="spinner"></div>Cargando productos...</div>
+    </main>
   </div>
+
 </div>
-
-<div class="results-info" id="results-info"></div>
-
-<main class="grid" id="grid">
-  <div class="state-msg"><div class="spinner"></div>Cargando productos...</div>
-</main>
 
 <div class="sync-bar" id="sync-bar"></div>
 
@@ -621,6 +673,7 @@ var selCapacidad = {};
 var selColor     = {};
 var selMarca     = {};
 var selProducto  = {};
+var selModelo    = {};
 var activeFilter = 'Todos'; // kept for hero/compat
 
 function setOf(obj) { return Object.keys(obj); }
@@ -688,7 +741,7 @@ function getFilteredProducts(opts) {
   opts = opts || {};
   return allProducts.filter(function(p) {
     var q = norm(document.getElementById('search').value);
-    var haystack = norm([p.producto,p.marca,p.capacidad,p.color,p.categoria,p.estado].join(' '));
+    var haystack = norm([p.producto,p.marca,p.modelo,p.capacidad,p.color,p.categoria,p.estado].join(' '));
     var matchQ = !q || haystack.indexOf(q) >= 0;
     var matchCat = opts.ignoreCategory || isEmpty(selCategory) || has(selCategory, p.categoria);
     var matchEstado = true;
@@ -699,8 +752,9 @@ function getFilteredProducts(opts) {
     var matchCap  = opts.ignoreCapacidad || isEmpty(selCapacidad) || has(selCapacidad, p.capacidad);
     var matchColor = opts.ignoreColor    || isEmpty(selColor)     || has(selColor, p.color);
     var matchMarca = opts.ignoreMarca    || isEmpty(selMarca)     || has(selMarca, p.marca);
-    var matchProd  = opts.ignoreProducto || isEmpty(selProducto)  || has(selProducto, p.producto);
-    return matchQ && matchCat && matchEstado && matchCap && matchColor && matchMarca && matchProd;
+    var matchProd   = opts.ignoreProducto || isEmpty(selProducto)  || has(selProducto, p.producto);
+    var matchModelo = opts.ignoreModelo   || isEmpty(selModelo)    || has(selModelo, p.modelo);
+    return matchQ && matchCat && matchEstado && matchCap && matchColor && matchMarca && matchProd && matchModelo;
   });
 }
 
@@ -767,7 +821,7 @@ function buildFacetGeneric(field, containerId, groupId, metaId, label0, clickFn,
 }
 
 function fieldToSel(field) {
-  var map = { capacidad: selCapacidad, color: selColor, marca: selMarca, producto: selProducto };
+  var map = { capacidad: selCapacidad, color: selColor, marca: selMarca, producto: selProducto, modelo: selModelo };
   return map[field];
 }
 
@@ -780,6 +834,8 @@ function buildCapacidadFilters() {
 }
 function buildColorFilters()    { buildFacetGeneric('color','color-filters','group-color','color-meta','Todos los colores','colorClick','','ignoreColor'); }
 function buildMarcaFilters()    { buildFacetGeneric('marca','marca-filters','group-marca','marca-meta','Todas las marcas','marcaClick','','ignoreMarca'); }
+function buildModeloFilters()  { buildFacetGeneric('modelo','modelo-filters','group-modelo','modelo-meta','Todos los modelos','modeloClick','','ignoreModelo'); }
+
 function buildProductoFilters() { buildFacetGeneric('producto','producto-filters','group-producto','producto-meta','Todos los modelos','productoClick','dark','ignoreProducto'); }
 
 // ── TOGGLE HANDLERS ──────────────────────────────────────────
@@ -801,6 +857,7 @@ function capClick(btn)      { var v=btn.getAttribute('data-val'); if(v==='Todos'
 function colorClick(btn)    { var v=btn.getAttribute('data-val'); if(v==='Todos') clearObj(selColor);     else toggle(selColor,v);     renderProducts(); }
 function marcaClick(btn)    { var v=btn.getAttribute('data-val'); if(v==='Todos') clearObj(selMarca);     else toggle(selMarca,v);     renderProducts(); }
 function productoClick(btn) { var v=btn.getAttribute('data-val'); if(v==='Todos') clearObj(selProducto);  else toggle(selProducto,v);  renderProducts(); }
+function modeloClick(btn)   { var v=btn.getAttribute('data-val'); if(v==='Todos') clearObj(selModelo);    else toggle(selModelo,v);    renderProducts(); }
 
 function handleSearchInput() { renderProducts(); }
 
@@ -829,6 +886,7 @@ function updateActiveChips() {
   setOf(selColor).forEach(function(v){     chips.push({label:'Color: '+v,   fn:'clearCol(\''+v+'\')'}); });
   setOf(selMarca).forEach(function(v){     chips.push({label:'Marca: '+v,   fn:'clearMar(\''+v+'\')'}); });
   setOf(selProducto).forEach(function(v){  chips.push({label:'Modelo: '+v,  fn:'clearPro(\''+v+'\')'}); });
+  setOf(selModelo).forEach(function(v){    chips.push({label:'Modelo: '+v,   fn:'clearMod(\''+v+'\')'}); });
   var q = document.getElementById('search').value.trim();
   if (q) chips.push({label:'Busqueda: '+q, fn:'clearSearch()'});
 
@@ -848,11 +906,12 @@ function clearCap(v) { delete selCapacidad[v]; renderProducts(); }
 function clearCol(v) { delete selColor[v];     renderProducts(); }
 function clearMar(v) { delete selMarca[v];     renderProducts(); }
 function clearPro(v) { delete selProducto[v];  renderProducts(); }
+function clearMod(v) { delete selModelo[v];    renderProducts(); }
 function clearSearch() { document.getElementById('search').value=''; renderProducts(); }
 
 function clearAllFilters() {
   clearObj(selCategory); clearObj(selEstado); clearObj(selCapacidad);
-  clearObj(selColor); clearObj(selMarca); clearObj(selProducto);
+  clearObj(selColor); clearObj(selMarca); clearObj(selProducto); clearObj(selModelo);
   activeFilter = 'Todos';
   document.getElementById('search').value = '';
   var ss = document.getElementById('sort-select');
@@ -867,6 +926,7 @@ function refreshFacets() {
   buildCapacidadFilters();
   buildColorFilters();
   buildMarcaFilters();
+  buildModeloFilters();
   buildProductoFilters();
   updateHero(activeFilter);
   updateActiveChips();
@@ -923,6 +983,42 @@ function esc(s) {
 }
 function escAttr(s) { return String(s||'').replace(/'/g,"\\'"); }
 
+// ── NORMALIZE FIELD VALUES ───────────────────────────────────
+var TYPO_MAP = {
+  // Colores
+  'starligth': 'Starlight',
+  'starlight': 'Starlight',
+  'midnight': 'Midnight',
+  'space black': 'Space Black',
+  'sky blue': 'Sky Blue',
+  'silver': 'Silver',
+  'indigo': 'Indigo',
+  'blush': 'Blush',
+  'gold': 'Gold',
+  'black': 'Black',
+  'white': 'White',
+  'red': 'Red',
+  'blue': 'Blue',
+  'green': 'Green',
+  'yellow': 'Yellow',
+  'purple': 'Purple',
+  'pink': 'Pink',
+  'natural titanium': 'Natural Titanium',
+  'black titanium': 'Black Titanium',
+  'white titanium': 'White Titanium',
+  'desert titanium': 'Desert Titanium',
+};
+
+function normalizeVal(str) {
+  if (!str) return '';
+  var trimmed = str.trim();
+  var lower = trimmed.toLowerCase();
+  // Check typo map first
+  if (TYPO_MAP[lower]) return TYPO_MAP[lower];
+  // Otherwise Title Case the first letter only
+  return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+}
+
 async function loadSheet() {
   try {
     var res = await fetch(API_URL);
@@ -932,8 +1028,12 @@ async function loadSheet() {
     try { rows = JSON.parse(text); } catch(e) { throw new Error('Respuesta invalida'); }
     if (!Array.isArray(rows)) throw new Error('Formato inesperado');
 
+    var HOJAS_EXCLUIDAS = ['info', 'config_proveedores'];
     var skipWords = ['actualizacion','proxima','equipos apple','entrega','cada'];
     allProducts = rows.filter(function(r) {
+      // Excluir hojas internas
+      var sheet = norm(r['_sheet']||'');
+      if (HOJAS_EXCLUIDAS.indexOf(sheet) >= 0) return false;
       var p = col(r,['producto','nombre','product']);
       if (!p || p.length<2) return false;
       var pn = norm(p);
@@ -944,8 +1044,9 @@ async function loadSheet() {
         id: i,
         producto:  col(r,['producto','nombre','product']),
         marca:     col(r,['marca','brand','fabricante']),
+        modelo:    col(r,['modelo','model']),
         capacidad: col(r,['capacidad','storage','almacenamiento']),
-        color:     col(r,['color','colour']),
+        color:     normalizeVal(col(r,['color','colour'])),
         precio:    parsePrice(col(r,['precio venta','precio','price','valor'])),
         estado:    col(r,['estado','status','disponibilidad','stock'])||'Disponible',
         categoria: r['_sheet']||col(r,['categoria','category','tipo'])||'MacBook',
