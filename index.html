@@ -589,14 +589,6 @@
       <div class="filter-row" id="capacidad-filters"></div>
     </div>
 
-    <div class="filter-group" id="group-color">
-      <div class="group-head">
-        <div class="group-title">Color</div>
-        <div class="group-meta" id="color-meta"></div>
-      </div>
-      <div class="filter-row" id="color-filters"></div>
-    </div>
-
     <div class="filter-group" id="group-producto">
       <div class="group-head">
         <div class="group-title">Producto</div>
@@ -670,7 +662,6 @@ var cart = [];
 var selCategory  = {};  // single select (category drives hero)
 var selEstado    = {};  // Set keys
 var selCapacidad = {};
-var selColor     = {};
 var selMarca     = {};
 var selProducto  = {};
 var selModelo    = {};
@@ -750,11 +741,10 @@ function getFilteredProducts(opts) {
       matchEstado = ekey && has(selEstado, ekey);
     }
     var matchCap  = opts.ignoreCapacidad || isEmpty(selCapacidad) || has(selCapacidad, p.capacidad);
-    var matchColor = opts.ignoreColor    || isEmpty(selColor)     || has(selColor, p.color);
     var matchMarca = opts.ignoreMarca    || isEmpty(selMarca)     || has(selMarca, p.marca);
     var matchProd   = opts.ignoreProducto || isEmpty(selProducto)  || has(selProducto, p.producto);
     var matchModelo = opts.ignoreModelo   || isEmpty(selModelo)    || has(selModelo, p.modelo);
-    return matchQ && matchCat && matchEstado && matchCap && matchColor && matchMarca && matchProd && matchModelo;
+    return matchQ && matchCat && matchEstado && matchCap && matchMarca && matchProd && matchModelo;
   });
 }
 
@@ -821,7 +811,7 @@ function buildFacetGeneric(field, containerId, groupId, metaId, label0, clickFn,
 }
 
 function fieldToSel(field) {
-  var map = { capacidad: selCapacidad, color: selColor, marca: selMarca, producto: selProducto, modelo: selModelo };
+  var map = { capacidad: selCapacidad, marca: selMarca, producto: selProducto, modelo: selModelo };
   return map[field];
 }
 
@@ -832,7 +822,6 @@ function buildCapacidadFilters() {
   var el = document.getElementById('capacidad-meta');
   if (el) el.textContent = Object.keys({}).length; // updated below
 }
-function buildColorFilters()    { buildFacetGeneric('color','color-filters','group-color','color-meta','Todos los colores','colorClick','','ignoreColor'); }
 function buildMarcaFilters()    { buildFacetGeneric('marca','marca-filters','group-marca','marca-meta','Todas las marcas','marcaClick','','ignoreMarca'); }
 function buildModeloFilters()  { buildFacetGeneric('modelo','modelo-filters','group-modelo','modelo-meta','Todos los modelos','modeloClick','','ignoreModelo'); }
 
@@ -854,7 +843,6 @@ function estadoClick(btn) {
   renderProducts();
 }
 function capClick(btn)      { var v=btn.getAttribute('data-val'); if(v==='Todos') clearObj(selCapacidad); else toggle(selCapacidad,v); renderProducts(); }
-function colorClick(btn)    { var v=btn.getAttribute('data-val'); if(v==='Todos') clearObj(selColor);     else toggle(selColor,v);     renderProducts(); }
 function marcaClick(btn)    { var v=btn.getAttribute('data-val'); if(v==='Todos') clearObj(selMarca);     else toggle(selMarca,v);     renderProducts(); }
 function productoClick(btn) { var v=btn.getAttribute('data-val'); if(v==='Todos') clearObj(selProducto);  else toggle(selProducto,v);  renderProducts(); }
 function modeloClick(btn)   { var v=btn.getAttribute('data-val'); if(v==='Todos') clearObj(selModelo);    else toggle(selModelo,v);    renderProducts(); }
@@ -883,7 +871,6 @@ function updateActiveChips() {
     chips.push({label:'Estado: '+(cfg?cfg.label:v), fn:'clearEst(\''+v+'\')'});
   });
   setOf(selCapacidad).forEach(function(v){ chips.push({label:'Cap: '+v,     fn:'clearCap(\''+v+'\')'}); });
-  setOf(selColor).forEach(function(v){     chips.push({label:'Color: '+v,   fn:'clearCol(\''+v+'\')'}); });
   setOf(selMarca).forEach(function(v){     chips.push({label:'Marca: '+v,   fn:'clearMar(\''+v+'\')'}); });
   setOf(selProducto).forEach(function(v){  chips.push({label:'Modelo: '+v,  fn:'clearPro(\''+v+'\')'}); });
   setOf(selModelo).forEach(function(v){    chips.push({label:'Modelo: '+v,   fn:'clearMod(\''+v+'\')'}); });
@@ -903,7 +890,6 @@ function updateActiveChips() {
 function clearCat(v) { delete selCategory[v]; activeFilter = isEmpty(selCategory)?'Todos':setOf(selCategory)[0]; updateHero(activeFilter); renderProducts(); }
 function clearEst(v) { delete selEstado[v];    renderProducts(); }
 function clearCap(v) { delete selCapacidad[v]; renderProducts(); }
-function clearCol(v) { delete selColor[v];     renderProducts(); }
 function clearMar(v) { delete selMarca[v];     renderProducts(); }
 function clearPro(v) { delete selProducto[v];  renderProducts(); }
 function clearMod(v) { delete selModelo[v];    renderProducts(); }
@@ -911,7 +897,7 @@ function clearSearch() { document.getElementById('search').value=''; renderProdu
 
 function clearAllFilters() {
   clearObj(selCategory); clearObj(selEstado); clearObj(selCapacidad);
-  clearObj(selColor); clearObj(selMarca); clearObj(selProducto); clearObj(selModelo);
+  clearObj(selMarca); clearObj(selProducto); clearObj(selModelo);
   activeFilter = 'Todos';
   document.getElementById('search').value = '';
   var ss = document.getElementById('sort-select');
@@ -924,7 +910,6 @@ function refreshFacets() {
   buildCategoryFilters();
   buildEstadoFilters();
   buildCapacidadFilters();
-  buildColorFilters();
   buildMarcaFilters();
   buildModeloFilters();
   buildProductoFilters();
