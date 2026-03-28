@@ -771,7 +771,6 @@ function sendWhatsApp() {
   var descPct3 = Math.round((1 - r.us.mult) * 100);
   msg += 'MI EQUIPO ACTUAL:\n';
   msg += r.us.producto + ' ' + r.us.capacidad + ' - Estado: ' + r.us.estado + '\n';
-  msg += 'Precio base: ' + formatUSD(r.us.precio);
   if (descPct3 > 0) msg += ' (−' + descPct3 + '% por estado)';
   msg += '\n';
   msg += 'Valor de canje ofrecido: ' + formatUSD(r.us.precioCliente) + '\n\n';
@@ -785,11 +784,11 @@ function sendWhatsApp() {
     msg += 'Precio: ' + formatUSD(r.nu.precio) + '\n\n';
   }
   if (r.diferencia > 0) {
-    msg += 'DIFERENCIA A ABONAR: ' + formatUSD(r.diferencia) + '\n\n';
+    msg += 'DIFERENCIA APROXIMADA A ABONAR: ' + formatUSD(r.diferencia) + '\n\n';
   } else {
     msg += 'Mi equipo cubre el valor del nuevo.\n\n';
   }
-  msg += 'Quedamos en contacto!';
+  msg += 'Espero la confirmación!';
   window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(msg), '_blank');
 }
 
