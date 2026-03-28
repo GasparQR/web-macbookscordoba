@@ -739,23 +739,23 @@ function goStep3() {
     : '− ' + formatUSD(nu.precio);
   document.getElementById('res-nuevo-val').textContent = nuPriceStr;
 
-  var descPct2 = Math.round((1 - r.us.mult) * 100);
-  var breakdown = 'Base ' + formatUSD(r.us.precio);
-  if (descPct2 > 0) breakdown += ' − ' + descPct2 + '% por estado (' + r.us.estado + ')';
-  breakdown += ' − USD ' + GANANCIA + ' margen = ' + formatUSD(r.us.precioCliente);
+  var descPct2 = Math.round((1 - us.mult) * 100);
+var breakdown = 'Base ' + formatUSD(us.precio);
+if (descPct2 > 0) breakdown += ' − ' + descPct2 + '% por estado (' + us.estado + ')';
+breakdown += ' − USD ' + GANANCIA + ' margen = ' + formatUSD(us.precioCliente);
 
-  if (diferencia <= 0) {
-    document.getElementById('res-total').textContent = '¡A tu favor!';
-    document.getElementById('res-total').style.color = '#34c759';
-    document.getElementById('res-note').textContent = 'Tu equipo cubre el valor del nuevo. Consultanos por los detalles.';
-  } else {
-    document.getElementById('res-total').textContent = formatUSD(diferencia);
-    document.getElementById('res-total').style.color = '#5e5ce6';
-    var rangeNote = (r.nu.precioMax && r.nu.precioMax !== r.nu.precio)
-      ? ' El precio final depende del modelo exacto ('  + formatUSD(r.nu.precio) + '—' + formatUSD(r.nu.precioMax) + ').'
-      : '';
-    document.getElementById('res-note').textContent = breakdown + '. Precio orientativo.' + rangeNote;
-  }
+if (diferencia <= 0) {
+  document.getElementById('res-total').textContent = '¡A tu favor!';
+  document.getElementById('res-total').style.color = '#34c759';
+  document.getElementById('res-note').textContent = 'Tu equipo cubre el valor del nuevo. Consultanos por los detalles.';
+} else {
+  document.getElementById('res-total').textContent = formatUSD(diferencia);
+  document.getElementById('res-total').style.color = '#5e5ce6';
+  var rangeNote = (nu.precioMax && nu.precioMax !== nu.precio)
+    ? ' El precio final depende del modelo exacto ('  + formatUSD(nu.precio) + '—' + formatUSD(nu.precioMax) + ').'
+    : '';
+  document.getElementById('res-note').textContent = breakdown + '. Precio orientativo.' + rangeNote;
+}
 
   // Store for WhatsApp
   window._canjeResult = { us: us, nu: nu, diferencia: diferencia };
