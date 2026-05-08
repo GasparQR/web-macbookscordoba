@@ -209,7 +209,7 @@
   .hero-section {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 2rem;
     animation: slideInUp 0.6s ease-out 0.4s both;
   }
 
@@ -220,7 +220,7 @@
 
   .estado-filters {
     display: flex;
-    gap: 10px;
+    gap: 16px;
     flex-wrap: wrap;
     justify-content: center;
     padding: 0 1rem;
@@ -230,23 +230,24 @@
     background: rgba(255,255,255,0.65);
     border: 0.5px solid rgba(0,0,0,0.1);
     color: #6e6e73;
-    padding: 7px 16px;
+    padding: 10px 20px;
     border-radius: 980px;
     cursor: pointer;
     font-family: inherit;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     backdrop-filter: blur(10px);
     display: inline-flex;
     align-items: center;
-    gap: 7px;
+    gap: 8px;
   }
 
   .estado-btn:hover {
     background: rgba(255,255,255,0.9);
     border-color: rgba(0,0,0,0.15);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
   }
 
   .estado-btn.active {
@@ -257,8 +258,8 @@
   }
 
   .estado-btn .dot {
-    width: 7px;
-    height: 7px;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     display: inline-block;
   }
@@ -667,6 +668,73 @@
     background: rgba(0,0,0,0.06);
     padding: 3px 9px;
     border-radius: 6px;
+  }
+
+  .variant-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, rgba(52, 199, 89, 0.15) 0%, rgba(52, 199, 89, 0.08) 100%);
+    color: #248a3d;
+    padding: 4px 11px;
+    border-radius: 980px;
+  }
+
+  .color-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .color-option {
+    background: rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+    transition: all 0.2s ease;
+  }
+
+  .color-option:hover {
+    background: rgba(94, 92, 230, 0.08);
+    border-color: rgba(94, 92, 230, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(94, 92, 230, 0.15);
+  }
+
+  .color-name {
+    font-size: 11px;
+    font-weight: 700;
+    color: #1d1d1f;
+  }
+
+  .color-price {
+    font-size: 10px;
+    font-weight: 600;
+    color: #5e5ce6;
+  }
+
+  .color-estado {
+    font-size: 9px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+
+  .color-estado.avail {
+    background: rgba(52, 199, 89, 0.15);
+    color: #248a3d;
+  }
+
+  .color-estado.no-avail {
+    background: rgba(255, 59, 48, 0.15);
+    color: #c0392b;
   }
 
   .card-footer {
@@ -1896,6 +1964,23 @@ function renderProducts() {
     return String(a.producto||'').localeCompare(String(b.producto||''));
   });
 
+  // Agrupar por producto (modelo) y capacidad
+  var grouped = {};
+  filtered.forEach(function(p) {
+    var key = p.producto + '|' + p.capacidad;
+    if (!grouped[key]) {
+      grouped[key] = {
+        producto: p.producto,
+        capacidad: p.capacidad,
+        categoria: p.categoria,
+        variantes: []
+      };
+    }
+    grouped[key].variantes.push(p);
+  });
+
+  var groupedList = Object.keys(grouped).map(function(k) { return grouped[k]; });
+
   refreshFacets();
   updateStats(filtered);
 
@@ -1908,21 +1993,40 @@ function renderProducts() {
     return;
   }
 
-  grid.innerHTML = filtered.map(function(p,idx) {
-    var avail = isAvailable(p.estado);
-    var sc = avail ? 'status-disp' : (norm(p.estado).indexOf('agot')>=0?'status-agot':'status-otro');
-    var specs = [p.capacidad,p.color].filter(Boolean);
+  grid.innerHTML = groupedList.map(function(group, idx) {
+    var mainVariant = group.variantes[0];
+    var hasMultipleVariants = group.variantes.length > 1;
     var delay = (idx%24)*25;
+    
+    var colorsHtml = '';
+    if (hasMultipleVariants) {
+      colorsHtml = '<div class="color-options">';
+      group.variantes.forEach(function(v) {
+        var avail = isAvailable(v.estado);
+        colorsHtml += '<div class="color-option" onclick="addToCart('+v.id+')" style="cursor:pointer" title="'+esc(v.color)+' - '+formatPrice(v.precio)+'">';
+        colorsHtml += '<div class="color-name">'+esc(v.color)+'</div>';
+        colorsHtml += '<div class="color-price">'+formatPrice(v.precio)+'</div>';
+        colorsHtml += '<div class="color-estado '+(avail?'avail':'no-avail')+'">'+esc(v.estado)+'</div>';
+        colorsHtml += '</div>';
+      });
+      colorsHtml += '</div>';
+    }
+
+    var avail = isAvailable(mainVariant.estado);
+    var sc = avail ? 'status-disp' : (norm(mainVariant.estado).indexOf('agot')>=0?'status-agot':'status-otro');
+    
     return '<div class="card" style="animation-delay:'+delay+'ms">'+
       '<div class="card-top">'+
-        '<span class="sheet-tag">'+esc(p.categoria)+'</span>'+
-        '<span class="'+sc+'">'+esc(p.estado)+'</span>'+
+        '<span class="sheet-tag">'+esc(mainVariant.categoria)+'</span>'+
+        (hasMultipleVariants?'<span class="variant-badge">'+group.variantes.length+' colores</span>':'<span class="'+sc+'">'+esc(mainVariant.estado)+'</span>')+
       '</div>'+
-      '<div class="card-name">'+esc(p.producto)+'</div>'+
-      (specs.length?'<div class="card-specs">'+specs.map(function(s){return '<span class="spec">'+esc(s)+'</span>';}).join('')+'</div>':'')+
+      '<div class="card-name">'+esc(mainVariant.producto)+'</div>'+
+      '<div class="card-specs"><span class="spec">'+esc(mainVariant.capacidad)+'</span></div>'+
+      (hasMultipleVariants ? colorsHtml : 
+        '<div class="card-specs"><span class="spec">'+esc(mainVariant.color)+'</span></div>')+
       '<div class="card-footer">'+
-        '<div class="price-section"><div class="price-lbl">Precio</div><div class="price">'+(p.precio?formatPrice(p.precio):'Consultar')+'</div></div>'+
-        '<button class="add-btn" onclick="addToCart('+p.id+')"'+(avail?'':' disabled')+'>'+(avail?'+ Agregar':'Agotado')+'</button>'+
+        '<div class="price-section"><div class="price-lbl">Precio</div><div class="price">'+formatPrice(mainVariant.precio)+'</div></div>'+
+        '<button class="add-btn" onclick="addToCart('+mainVariant.id+')"'+(avail?'':' disabled')+'>'+(avail?'+ Agregar':'Agotado')+'</button>'+
       '</div></div>';
   }).join('');
 }
