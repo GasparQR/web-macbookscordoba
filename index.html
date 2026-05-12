@@ -210,6 +210,9 @@
     display: flex;
     flex-direction: column;
     gap: 2rem;
+    position: relative;
+    z-index: 2;
+    margin-bottom: clamp(0.9rem, 2vw, 1.5rem);
     animation: slideInUp 0.6s ease-out 0.4s both;
   }
 
@@ -227,46 +230,66 @@
   }
 
   .estado-btn {
-    background: rgba(255,255,255,0.65);
-    border: 0.5px solid rgba(0,0,0,0.1);
-    color: #6e6e73;
-    padding: 10px 20px;
+    border: 1px solid rgba(0,0,0,0.08);
+    color: #1d1d1f;
+    padding: 10px 18px;
     border-radius: 980px;
     cursor: pointer;
     font-family: inherit;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(10px);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.55);
   }
 
   .estado-btn:hover {
-    background: rgba(255,255,255,0.9);
-    border-color: rgba(0,0,0,0.15);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.65);
   }
 
   .estado-btn.active {
-    background: rgba(255,255,255,0.9);
-    color: #1d1d1f;
-    border-color: rgba(0,0,0,0.18);
-    font-weight: 600;
+    background: #1d1d1f;
+    color: #fff;
+    border-color: #1d1d1f;
+    box-shadow: 0 10px 26px rgba(29,29,31,0.24);
   }
 
   .estado-btn .dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
     display: inline-block;
+    background: currentColor;
+    box-shadow: 0 0 0 4px rgba(255,255,255,0.55);
   }
 
-  .estado-btn.disponible .dot { background: #34c759; }
-  .estado-btn.transito .dot { background: #ff9f0a; }
-  .estado-btn.pedido .dot { background: #5e5ce6; }
+  .estado-btn.disponible {
+    background: rgba(52,199,89,0.12);
+    border-color: rgba(52,199,89,0.24);
+    color: #248a3d;
+  }
+
+  .estado-btn.transito {
+    background: rgba(255,159,10,0.14);
+    border-color: rgba(255,159,10,0.28);
+    color: #b86b00;
+  }
+
+  .estado-btn.pedido {
+    background: rgba(94,92,230,0.12);
+    border-color: rgba(94,92,230,0.25);
+    color: #4f46c8;
+  }
+
+  .estado-btn.active .dot {
+    box-shadow: 0 0 0 4px rgba(255,255,255,0.16);
+  }
 
   /* SIDEBAR LAYOUT */
   .catalog-layout {
@@ -681,11 +704,62 @@
     border-radius: 980px;
   }
 
+  .variant-details {
+    margin-top: 2px;
+  }
+
+  .variant-details summary {
+    list-style: none;
+    background: rgba(94, 92, 230, 0.08);
+    border: 1px solid rgba(94, 92, 230, 0.16);
+    border-radius: 12px;
+    color: #5e5ce6;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 9px 11px;
+    font-size: 11px;
+    font-weight: 800;
+    transition: all 0.2s ease;
+  }
+
+  .variant-details summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .variant-details summary::after {
+    content: '+';
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(94, 92, 230, 0.12);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .variant-details[open] summary {
+    background: rgba(94, 92, 230, 0.12);
+    border-color: rgba(94, 92, 230, 0.28);
+    margin-bottom: 8px;
+  }
+
+  .variant-details[open] summary::after {
+    content: '-';
+  }
+
+  .variant-summary-count {
+    color: #86868b;
+    font-weight: 700;
+  }
+
   .color-options {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-    gap: 8px;
-    margin-top: 8px;
+    grid-template-columns: repeat(auto-fit, minmax(74px, 1fr));
+    gap: 7px;
   }
 
   .color-option {
@@ -1439,7 +1513,7 @@
   </div>
 </section>
 
-<section class="hero-section" style="padding: 0 clamp(1.25rem, 3vw, 2rem);">
+<section class="hero-section" style="padding: 0 clamp(1.25rem, 3vw, 2rem) clamp(1.1rem, 2vw, 1.6rem);">
   <div class="estado-filters" id="estado-controls"></div>
 </section>
 
@@ -1633,9 +1707,9 @@ function updateHero(cat) {
 }
 
 var estadoConfig = [
-  { key: 'disponible', label: 'Disponible',  className: 'green',  matches: ['disp','disponible'] },
-  { key: 'transito',   label: 'En tránsito', className: 'orange', matches: ['trans','transito','camino'] },
-  { key: 'pedido',     label: 'A pedido',    className: 'violet', matches: ['pedido','encargo','orden'] },
+  { key: 'disponible', label: 'Disponible',  className: 'disponible', matches: ['disp','disponible'] },
+  { key: 'transito',   label: 'En tránsito', className: 'transito',   matches: ['trans','transito','camino'] },
+  { key: 'pedido',     label: 'A pedido',    className: 'pedido',     matches: ['pedido','encargo','orden'] },
 ];
 
 function matchesEstado(estadoVal, keys) {
@@ -1913,7 +1987,7 @@ async function loadSheet() {
     allProducts = rows.filter(function(r) {
       var sheet = norm(r['_sheet']||'');
       if (HOJAS_EXCLUIDAS.indexOf(sheet) >= 0) return false;
-      var p = col(r,['producto','nombre','product']);
+      var p = col(r,['producto','nombre','product','modelo','model']);
       if (!p || p.length<2) return false;
       var pn = norm(p);
       for (var i=0;i<skipWords.length;i++) { if(pn.indexOf(skipWords[i])>=0) return false; }
@@ -1921,7 +1995,7 @@ async function loadSheet() {
     }).map(function(r,i) {
       return {
         id: i,
-        producto:  col(r,['producto','nombre','product']),
+        producto:  col(r,['producto','nombre','product','modelo','model']),
         marca:     col(r,['marca','brand','fabricante']),
         modelo:    col(r,['modelo','model']),
         capacidad: col(r,['capacidad','storage','almacenamiento']),
@@ -1932,7 +2006,7 @@ async function loadSheet() {
       };
     });
 
-    if (!allProducts.length) throw new Error('No se encontraron productos. Verifica que las hojas tengan columna PRODUCTO.');
+    if (!allProducts.length) throw new Error('No se encontraron productos. Verifica que las hojas tengan columna PRODUCTO, NOMBRE o MODELO.');
     refreshFacets();
     renderProducts();
     document.getElementById('sync-bar').textContent =
@@ -2000,7 +2074,9 @@ function renderProducts() {
     
     var colorsHtml = '';
     if (hasMultipleVariants) {
-      colorsHtml = '<div class="color-options">';
+      colorsHtml = '<details class="variant-details" ontoggle="syncVariantButton(this)">'+
+        '<summary><span>Ver colores disponibles</span><span class="variant-summary-count">'+group.variantes.length+' opciones</span></summary>'+
+        '<div class="color-options">';
       group.variantes.forEach(function(v) {
         var avail = isAvailable(v.estado);
         colorsHtml += '<div class="color-option" onclick="addToCart('+v.id+')" style="cursor:pointer" title="'+esc(v.color)+' - '+formatPrice(v.precio)+'">';
@@ -2009,7 +2085,7 @@ function renderProducts() {
         colorsHtml += '<div class="color-estado '+(avail?'avail':'no-avail')+'">'+esc(v.estado)+'</div>';
         colorsHtml += '</div>';
       });
-      colorsHtml += '</div>';
+      colorsHtml += '</div></details>';
     }
 
     var avail = isAvailable(mainVariant.estado);
@@ -2026,9 +2102,28 @@ function renderProducts() {
         '<div class="card-specs"><span class="spec">'+esc(mainVariant.color)+'</span></div>')+
       '<div class="card-footer">'+
         '<div class="price-section"><div class="price-lbl">Precio</div><div class="price">'+formatPrice(mainVariant.precio)+'</div></div>'+
-        '<button class="add-btn" onclick="addToCart('+mainVariant.id+')"'+(avail?'':' disabled')+'>'+(avail?'+ Agregar':'Agotado')+'</button>'+
+        (hasMultipleVariants
+          ? '<button class="add-btn" onclick="toggleVariantDetails(event,this)">Elegir color</button>'
+          : '<button class="add-btn" onclick="addToCart('+mainVariant.id+')"'+(avail?'':' disabled')+'>'+(avail?'+ Agregar':'Agotado')+'</button>')+
       '</div></div>';
   }).join('');
+}
+
+function toggleVariantDetails(event, btn) {
+  event.preventDefault();
+  var card = btn.closest('.card');
+  if (!card) return;
+  var details = card.querySelector('.variant-details');
+  if (!details) return;
+  details.open = !details.open;
+  syncVariantButton(details);
+}
+
+function syncVariantButton(details) {
+  var card = details.closest('.card');
+  if (!card) return;
+  var btn = card.querySelector('.card-footer .add-btn');
+  if (btn) btn.textContent = details.open ? 'Ocultar colores' : 'Elegir color';
 }
 
 function addToCart(id) {
